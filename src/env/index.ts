@@ -1,5 +1,7 @@
 import Config from 'react-native-config';
 
+export const APPLICATION_ID = Config.APPLICATION_ID;
+
 export const TEST_MODE = Config.TEST_MODE === 'true' || false;
 
 export const SUBMIT_URL = Config.SUBMIT_URL;

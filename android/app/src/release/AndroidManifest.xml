@@ -9,10 +9,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:node="remove" />
 
-    <application
-        android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning"
-        tools:targetApi="28">
+    <application>
 
         <provider
             android:name="cl.json.RNShareFileProvider"

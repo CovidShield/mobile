@@ -13,28 +13,33 @@ const DefaultConfiguration = {
   transmissionRiskWeight: 50,
 };
 
-const MockBackend: BackendInterface = {
-  async claimOneTimeCode(_code: string) {
+class MockBackend implements BackendInterface {
+  claimOneTimeCodeResponse = false;
+
+  claimOneTimeCode = async (_code: string) => {
+    if (!this.claimOneTimeCodeResponse) {
+      throw new Error('Invalid code');
+    }
     return {
       clientPrivateKey: 'clientPrivateKey',
       clientPublicKey: 'clientPublicKey',
       serverPublicKey: 'serverPublicKey',
     };
-  },
+  };
 
-  async reportDiagnosisKeys(_submissionKeyPair: SubmissionKeySet, _keys: TemporaryExposureKey[]) {},
+  reportDiagnosisKeys = async (_submissionKeyPair: SubmissionKeySet, _keys: TemporaryExposureKey[]) => {};
 
-  async retrieveDiagnosisKeysByDay(_sinceDate: Date) {
+  retrieveDiagnosisKeysByDay = async (_sinceDate: Date) => {
     return [];
-  },
+  };
 
-  async retrieveDiagnosisKeysByHour(_sinceDate: Date) {
+  retrieveDiagnosisKeysByHour = async (_sinceDate: Date) => {
     return [];
-  },
+  };
 
-  async getExposureConfiguration() {
+  getExposureConfiguration = async () => {
     return DefaultConfiguration;
-  },
-};
+  };
+}
 
 export default MockBackend;

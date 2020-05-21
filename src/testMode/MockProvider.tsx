@@ -5,7 +5,7 @@ import {MockExposureNotification} from './MockExposureNotification';
 import MockBackend from './MockBackend';
 
 interface Mock {
-  backend: typeof MockBackend;
+  backend: MockBackend;
   exposureNotification: MockExposureNotification;
   enabled: boolean;
   setEnabled(enabled: boolean): void;
@@ -21,7 +21,7 @@ export const MockProvider = ({children}: MockProviderProps) => {
   // Note: set this to false if doesn't want to turn on mock server by default
   const [enabled, setEnabled] = useState(true);
 
-  const mockBackend = MockBackend;
+  const mockBackend = useMemo(() => new MockBackend(), []);
   const mockExposureNotification = useMemo(() => new MockExposureNotification(), []);
 
   const value: Mock = useMemo(() => {

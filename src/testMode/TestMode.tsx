@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState, useEffect} from 'react';
 import {createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/drawer';
 import {useI18n} from '@shopify/react-i18n';
 import PushNotification from 'bridge/PushNotification';
@@ -68,6 +68,15 @@ const DrawerContent = () => {
     updateExposureStatus();
   }, [exposureStatus.type, mock.exposureNotification, updateExposureStatus]);
 
+  const [claimOneTimeCodeResponse, setClaimOneTimeCodeResponse] = useState(mock.backend.claimOneTimeCodeResponse);
+  const onToggleClaimOneTimeCodeResponse = useCallback(() => {
+    setClaimOneTimeCodeResponse(currentStatus => {
+      const shouldSuccess = !currentStatus;
+      mock.backend.claimOneTimeCodeResponse = shouldSuccess;
+      return shouldSuccess;
+    });
+  }, [mock.backend]);
+
   return (
     <DrawerContentScrollView>
       <Box>
@@ -90,6 +99,11 @@ const DrawerContent = () => {
             <>
               <Item title="System status" onPress={onToggleSystemStatus} connectedRight={systemStatus} />
               <Item title="Expose status" onPress={onToggleExposureStatus} connectedRight={exposureStatus.type} />
+              <Item
+                title="Claim OneTimeCode Response"
+                onPress={onToggleClaimOneTimeCodeResponse}
+                connectedRight={claimOneTimeCodeResponse ? 'diagnosed' : 'none'}
+              />
             </>
           )}
         </Section>

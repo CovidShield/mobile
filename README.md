@@ -79,7 +79,7 @@ yarn run-android
 You can also build the app with native development tool:
 
 - For iOS, using XCode by opening the `CovidShield.xcworkspace` file in the `ios` folder.
-- For Andorid, using Android Studio by opening `android` folder.
+- For Android, using Android Studio by opening `android` folder.
 
 ### Development mode
 

@@ -1,4 +1,4 @@
-package com.covidshield.module
+package app.covidshield.module
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -8,10 +8,10 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
-import com.covidshield.MainActivity
-import com.covidshield.R
-import com.covidshield.extensions.parse
-import com.covidshield.extensions.toJson
+import app.covidshield.MainActivity
+import app.covidshield.R
+import app.covidshield.extensions.parse
+import app.covidshield.extensions.toJson
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule

@@ -1,4 +1,4 @@
-package com.covidshield.extensions
+package app.covidshield.extensions
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableArray

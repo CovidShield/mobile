@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <uses-permission
         android:name="android.permission.USE_FINGERPRINT"
         tools:node="remove" />
@@ -11,12 +9,7 @@
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:node="remove" />
 
-    <application
-        android:usesCleartextTraffic="true"
-        tools:ignore="GoogleAppIndexingWarning"
-        tools:targetApi="28">
-
-        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
+    <application>
 
         <provider
             android:name="cl.json.RNShareFileProvider"

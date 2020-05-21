@@ -20,8 +20,14 @@ This app is built using React Native and designed to work well with patterns on 
 
 ## User Experience
 
-- [Design files on Figma](https://www.figma.com/file/b76OYDhkTKJCaqDfVQybQY/Open-Source-COVID-Shield?node-id=1%3A18)
-- [Glossary of terms](https://github.com/CovidShield/rationale/blob/master/GLOSSARY.md)
+### Aurora Design System
+COVID Shield follows design and content guidelines from the [Aurora Design System](https://design.gccollab.ca/) published by the Government of Canada's Digital Enablement Service.
+
+### Design
+Our [design assets and working files on Figma](https://www.figma.com/file/b76OYDhkTKJCaqDfVQybQY/Open-Source-COVID-Shield?node-id=1%3A18).
+
+### Content
+Our [glossary of terms](https://github.com/CovidShield/rationale/blob/master/GLOSSARY.md).
 
 ## Local development
 

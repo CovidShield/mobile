@@ -1,7 +1,7 @@
-package com.covidshield.module
+package app.covidshield.module
 
 import android.content.Context
-import com.covidshield.extensions.toWritableArray
+import app.covidshield.extensions.toWritableArray
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule

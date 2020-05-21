@@ -1,7 +1,7 @@
-package com.covidshield.module
+package app.covidshield.module
 
-import com.covidshield.extensions.toWritableArray
-import com.covidshield.extensions.toWritableMap
+import app.covidshield.extensions.toWritableArray
+import app.covidshield.extensions.toWritableMap
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
@@ -9,7 +9,6 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.ReadableMap
 import com.google.android.gms.nearby.Nearby
-import com.google.android.gms.nearby.exposurenotification.ExposureConfiguration.ExposureConfigurationBuilder
 
 class ExposureNotificationModule(context: ReactApplicationContext) : ReactContextBaseJavaModule(context) {
 

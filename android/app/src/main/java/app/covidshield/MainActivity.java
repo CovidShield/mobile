@@ -1,4 +1,4 @@
-package com.covidshield;
+package app.covidshield;
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity;
@@ -8,8 +8,8 @@ public class MainActivity extends ReactActivity {
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
-      SplashScreen.show(this);
-      super.onCreate(savedInstanceState);
+    SplashScreen.show(this);
+    super.onCreate(savedInstanceState);
   }
 
   /**

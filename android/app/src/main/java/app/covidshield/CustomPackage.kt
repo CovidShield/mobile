@@ -1,9 +1,9 @@
-package com.covidshield
+package app.covidshield
 
 import android.view.View
-import com.covidshield.module.CovidShieldModule
-import com.covidshield.module.ExposureNotificationModule
-import com.covidshield.module.PushNotificationModule
+import app.covidshield.module.CovidShieldModule
+import app.covidshield.module.ExposureNotificationModule
+import app.covidshield.module.PushNotificationModule
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext

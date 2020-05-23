@@ -57,6 +57,7 @@ Follow the steps outlined in [React Native Development Environment Setup](https:
 
 - XCode 11.5 or greater
 - iOS device or simulator with iOS 13.5 or greater
+- [Bundler](https://bundler.io/) to install the right version of CocoaPods locally
 
 #### Android
 
@@ -80,10 +81,10 @@ yarn install
 sudo gem install cocoapods
 ```
 
-##### 2.2 Additional step for iOS
+#### 2.2 Additional step for iOS
 
 ```bash
-cd ios && pod install
+bundle install && yarn pod-install
 ```
 
 #### 3. Environment config

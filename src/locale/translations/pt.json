@@ -22,7 +22,7 @@
     "ExposureNotificationsDisabled": "As notificações de exposição estão desligadas",
     "ExposureNotificationsDisabledDetailed": "São necessárias notificações de exposição para que o COVID Shield funcione.",
     "EnableExposureNotificationsCTA": "Ligar notificações de exposição",
-    "NoConnectivity": "COVID Shield está desconectado",
+    "NoConnectivity": "Sem conexão à internet",
     "NoConnectivityDetailed": "O COVID Shield precisa de acesso à Internet para continuar verificando a exposição potencial.",
     "AppName": "COVID Shield",
     "LastCheckedMinutes": {

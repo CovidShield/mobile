@@ -148,6 +148,13 @@ After modifying the content you must run the `generate-translations` command in 
 yarn generate-translations
 ```
 
+### Add new translation
+
+1. Create a new i18n file in `src/locale/translations/pt.json`;
+2. Add the new option `pt` in `translations.json`;
+3. Regenerate the translations `yarn generate-translations`;
+4. Add more an option in [src/components/LanguageToggle.tsx](./src/components/LanguageToggle.tsx);
+
 ## Who built COVID Shield?
 
 We are a group of Shopify volunteers who want to help to slow the spread of COVID-19 by offering our

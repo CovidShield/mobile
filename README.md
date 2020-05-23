@@ -75,13 +75,15 @@ git clone git@github.com:CovidShield/mobile.git
 yarn install
 ```
 
-##### 2.1 Install cocoapods
+##### 2.1 Additional step for iOS
+
+###### 2.1.1 Install Cocoapods
 
 ```bash
 sudo gem install cocoapods
 ```
 
-#### 2.2 Additional step for iOS
+###### 2.1.2 Install pods
 
 ```bash
 bundle install && yarn pod-install

@@ -12,7 +12,7 @@ export const LanguageToggle = () => {
       selectedValue={i18n.locale}
       style={{height: 50, width: 140}}
       onValueChange={itemValue => {
-        setLocale(itemValue);
+        setLocale(`${itemValue}`);
       }}
     >
       <Picker.Item label={i18n.translate('LanguageSelect.EnShort')} value="en" />

@@ -165,7 +165,7 @@ For questions, we can be reached at <press@covidshield.app>.
 
 ## Troubleshooting
 
-### Android - Problem with debug.keystore during run Android version
+### [Android] Problem with debug.keystore during run Android version
 
 Logs
 

@@ -1,9 +1,9 @@
 {
   "Home": {
     "NoExposureDetected": "Nenhuma exposição detectada",
-    "NoExposureDetectedDetailed": "Com base em seus IDs aleatórios, você não esteve perto de alguém nos últimos 14 dias que deu positivo para COVID-19.",
+    "NoExposureDetectedDetailed": "Com base em seus IDs aleatórios, você não esteve perto de alguém nos últimos 14 dias que testou positivo para COVID-19.",
     "ExposureDetected": "Você possivelmente foi exposto ao COVID-19",
-    "ExposureDetectedDetailed": "Com base nos seus IDs aleatórios, você esteve perto de alguém nos últimos 14 dias que deu positivo para COVID-19.",
+    "ExposureDetectedDetailed": "Com base nos seus IDs aleatórios, você esteve perto de alguém nos últimos 14 dias que testou positivo para COVID-19.",
     "SeeGuidance": "Leia a orientação sobre COVID-19 do Canadá",
     "GuidanceUrl": "https://www.canada.ca/en/public-health/services/publications/diseases-conditions/covid-19-how-to-isolate-at-home.html",
     "SignalDataShared": "Obrigado por ajudar a diminuir a propagação",
@@ -23,7 +23,7 @@
     "ExposureNotificationsDisabledDetailed": "São necessárias notificações de exposição para que o COVID Shield funcione.",
     "EnableExposureNotificationsCTA": "Ligar notificações de exposição",
     "NoConnectivity": "Sem conexão à internet",
-    "NoConnectivityDetailed": "O COVID Shield precisa de acesso à Internet para continuar verificando a exposição potencial.",
+    "NoConnectivityDetailed": "O COVID Shield precisa de acesso à Internet para continuar verificando à potenciais exposições.",
     "AppName": "COVID Shield",
     "LastCheckedMinutes": {
       "One": "Última verificação há {number} minuto",
@@ -53,23 +53,23 @@
     "BluetoothCardAction": "Ligar o Bluetooth",
     "EnterCodeCardTitle": "Código do COVID Shield",
     "EnterCodeCardBody": "Um profissional de saúde pediu para você inserir um código COVID Shield?",
-    "EnterCodeCardAction": "Coloque o código",
+    "EnterCodeCardAction": "Insira o código",
     "NotificationCardStatus": "As notificações estão ",
     "NotificationCardStatusOff": "DESLIGADAS",
-    "NotificationCardBody": "You will not receive push notifications if you have possibly been exposed to COVID-19. Timely notification of potential exposure is important in helping to slow the spread of COVID-19.",
-    "NotificationCardAction": "Turn on push notifications",
-    "ExposureNotificationCardStatus": "Exposure notifications are ",
-    "ExposureNotificationCardStatusOff": "OFF",
-    "ExposureNotificationCardBody": "Exposure notifications are needed for COVID Shield to work.",
-    "ExposureNotificationCardAction": "Turn on exposure notifications"
+    "NotificationCardBody": "Você não receberá notificações se tiver sido exposto ao COVID-19. A notificação de potencial exposição é importante para ajudar a diminuir a propagação do COVID-19.",
+    "NotificationCardAction": "Ligar notificações",
+    "ExposureNotificationCardStatus": "As notificações de exposição estão ",
+    "ExposureNotificationCardStatusOff": "DESLIGADAS",
+    "ExposureNotificationCardBody": "São necessárias notificações de exposição para que o COVID Shield funcione.",
+    "ExposureNotificationCardAction": "Ligar notificações de exposição"
   },
   "Info": {
-    "CheckSymptoms": "Check symptoms",
+    "CheckSymptoms": "Verifique os sintomas",
     "SymptomsUrl": "https://ca.thrive.health/covid19/en",
-    "TellAFriend": "Share app",
-    "LearnMore": "How COVID Shield works",
-    "ChangeLanguage": "Change language",
-    "Privacy": "Read privacy policy"
+    "TellAFriend": "Compartilhe o aplicativo",
+    "LearnMore": "Como o COVID Shield funciona",
+    "ChangeLanguage": "Mudar idioma",
+    "Privacy": "Leia a política de privacidade"
   },
   "LanguageSelect": {
     "Title": "Idioma",
@@ -85,7 +85,7 @@
     "step-1Title": "Como o COVID Shield funciona",
     "step-1": "Seu telefone usa o Bluetooth para coletar e compartilhar IDs aleatórios com telefones próximos a você com o COVID Shield instalado. Esses IDs são armazenados com segurança em cada telefone.",
     "step-2Title": "Se você foi potencialmente exposto ao COVID-19",
-    "step-2": "Você receberá uma notificação se tiver perto de alguém nos últimos 14 dias com teste positivo para COVID-19.",
+    "step-2": "Você receberá uma notificação se esteve próximo de alguém nos últimos 14 dias que testou positivo para COVID-19.",
     "step-3Title": "Se você testar positivo para COVID-19",
     "step-3": "Notifique anonimamente as pessoas que estiveram perto de você nos últimos 14 dias de que elas possivelmente foram expostas.",
     "ActionBack": "Voltar",
@@ -99,7 +99,7 @@
     "Platform-messages": "Compartilhar em Mensagens",
     "Platform-instagram": "Compartilhar no Instagram",
     "More": "Mais aplicativos",
-    "Message": "Junte-se a mim para ajudar a diminuir a propagação do COVID-19. Baixe o aplicativo COVID Shield: https://covidshield.app",
+    "Message": "Junte-se a mim e ajude a diminuir a propagação do COVID-19. Baixe o aplicativo COVID Shield: https://covidshield.app",
     "Close": "Fechar"
   },
   "Onboarding": {
@@ -146,7 +146,7 @@
   },
   "Notification": {
     "ExposedMessageTitle": "Você possivelmente foi exposto ao COVID-19",
-    "ExposedMessageBody": "Com base nos seus IDs aleatórios, você esteve perto de alguém nos últimos 14 dias que deu positivo para COVID-19.",
+    "ExposedMessageBody": "Com base nos seus IDs aleatórios, você esteve perto de alguém nos últimos 14 dias que testou positivo para COVID-19.",
     "OffMessageTitle": "O COVID Shield está desligado",
     "OffMessageBody": "Ligue o COVID Shield para ser notificado se você tiver sido potencialmente exposto ao COVID-19.",
     "DailyUploadNotificationTitle": "Compartilhe seus novos IDs aleatórios",

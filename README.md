@@ -153,10 +153,10 @@ yarn generate-translations
 
 ### Add new translation
 
-1. Create a new i18n file in `src/locale/translations/pt.json`;
-2. Add the new option `pt` in `translations.json`;
+1. Create a new i18n file in [src/locale/translations/pt.json](./src/locale/translations/pt.json);
+2. Add the new option `pt` in [translations.js](./translations.js);
 3. Regenerate the translations `yarn generate-translations`;
-4. Add more an option in [src/components/LanguageToggle.tsx](./src/components/LanguageToggle.tsx);
+4. Add the new option in [src/components/LanguageToggle.tsx](./src/components/LanguageToggle.tsx);
 
 ## Who built COVID Shield?
 
@@ -181,14 +181,14 @@ Execution failed for task ':app:packageDebug'.
    > com.android.ide.common.signing.KeytoolException: Failed to read key AndroidDebugKey from store "/Users/YOUR_USER/.android/debug.keystore": keystore password was incorrect
 ```
 
-Generate a new `debug.keystore`.
+Generate a new `debug.keystore`:
 
 ```bash
 cd android/app
 keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000
 ```
 
-Copy your debug.keystore to `~/.android/debug.keystore`
+Copy your debug.keystore to `~/.android/debug.keystore`:
 
 ```bash
 cd android/app

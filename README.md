@@ -157,6 +157,7 @@ yarn generate-translations
 2. Add the new option `pt` in [translations.js](./translations.js);
 3. Regenerate the translations `yarn generate-translations`;
 4. Add the new option in [src/components/LanguageToggle.tsx](./src/components/LanguageToggle.tsx);
+5. Add the new option in [src/screens/language/Language.tsx](./src/screens/language/Language.tsx);
 
 ## Who built COVID Shield?
 

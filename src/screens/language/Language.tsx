@@ -35,7 +35,7 @@ export const LanguageScreen = () => {
   const close = useCallback(() => navigation.goBack(), [navigation]);
   const {setLocale} = useStorage();
   const toggle = useCallback(
-    (newLocale: 'en' | 'fr' | 'pt') => () => {
+    (newLocale: 'en' | 'fr' | 'pt-BR') => () => {
       setLocale(newLocale);
     },
     [setLocale],
@@ -69,9 +69,9 @@ export const LanguageScreen = () => {
               isActive={i18n.locale === 'fr'}
             />
             <LanguageSelectItem
-              onPress={toggle('pt')}
-              text={i18n.translate('LanguageSelect.Pt')}
-              isActive={i18n.locale === 'pt'}
+              onPress={toggle('pt-BR')}
+              text={i18n.translate('LanguageSelect.PtBR')}
+              isActive={i18n.locale === 'pt-BR'}
             />
           </Box>
         </ScrollView>

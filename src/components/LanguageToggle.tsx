@@ -17,7 +17,7 @@ export const LanguageToggle = () => {
     >
       <Picker.Item label={i18n.translate('LanguageSelect.EnShort')} value="en" />
       <Picker.Item label={i18n.translate('LanguageSelect.FrShort')} value="fr" />
-      <Picker.Item label={i18n.translate('LanguageSelect.PtShort')} value="pt" />
+      <Picker.Item label={i18n.translate('LanguageSelect.PtBRShort')} value="pt-BR" />
     </Picker>
   );
 };

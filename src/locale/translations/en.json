@@ -75,8 +75,10 @@
     "Title": "Language",
     "En": "English (Canada)",
     "Fr": "Français (Canada)",
+    "De": "Deutsch",
     "EnShort": "English",
     "FrShort": "Français",
+    "DeShort": "Deutsch",
     "Close": "Back"
   },
   "Tutorial": {

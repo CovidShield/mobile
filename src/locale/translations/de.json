@@ -4,11 +4,11 @@
     "NoExposureDetectedDetailed": "Den zufälligen IDs nach zu urteilen, warst du in den letzten 14 Tagen nicht in der Nähe einer Person, die positiv auf COVID-19 getestet wurde. ",
     "ExposureDetected": "Du bist eventuell mit COVID-19 in Kontakt gekommen",
     "ExposureDetectedDetailed": "Den zufälligen IDs nach zu urteilen, warst du in den letzten 14 Tagen in der Nähe einer Person, die positiv auf COVID-19 getestet wurde. ",
-    "SeeGuidance": "Lies Kanadas COVID-19 Handlungsempfehlung",
+    "SeeGuidance": "Lies die kanadische COVID-19 Handlungsempfehlung",
     "GuidanceUrl": "https://www.canada.ca/en/public-health/services/publications/diseases-conditions/covid-19-how-to-isolate-at-home.html",
     "SignalDataShared": "Danke, dass du hilst die Ausbreitung zu verlangsamen.",
     "SignalDataSharedDetailed": {
-      "One": "Du bekommst täglich eine Nachricht, die dich fragt deine zufälligen IDs zu teilen, für den nächsten {number} Tag",
+      "One": "Du bekommst eine Nachricht, die dich fragt deine zufälligen IDs zu teilen, im Laufe des nächsten Tages",
       "Other": "Du bekommst täglich eine Nachricht, die dich fragt deine zufälligen IDs zu teilen, für die nächsten {number} Tage"
     },
     "SignalDataSharedCTA": "Verfolge deine Symptome",
@@ -16,14 +16,14 @@
     "DailyShare": "Teile deine neuen zufälligen IDs",
     "DailyShareDetailed": "Das Teilen deiner Daten hilft anderen herauszufinden ob sie mit COVID-19 in Kontakt kamen.",
     "ShareRandomIDsCTA": "Teile deine zufälligen IDs",
-    "BluetoothDisabled": "Bluetooth ist aus",
+    "BluetoothDisabled": "Bluetooth ist ausgeschaltet",
     "EnableBluetoothCTA": "COVID Shield benötigt Bluetooth um zufällige IDs zu teilen und sammeln.",
-    "TurnOnBluetooth": "Schalte Bluetooth an",
+    "TurnOnBluetooth": "Bluetooth anschalten",
     "ExposureNotificationsDisabled": "COVID-19 Kontakt Benachrichtungen sind aus",
     "ExposureNotificationsDisabledDetailed": "COVID-19 Kontakt Benachrichtungen werden benötigt damit COVID Shield funktioniert.",
     "EnableExposureNotificationsCTA": "Schalte COVID-19 Kontakt Benachrichtigungen ein",
-    "NoConnectivity": "Keine Internet Verbindung",
-    "NoConnectivityDetailed": "COVID Shield braucht Internet um mögliche Kontakte zu finden.",
+    "NoConnectivity": "Keine Internetverbindung",
+    "NoConnectivityDetailed": "COVID Shield benötigt eine Internetverbindung um mögliche Kontakte zu finden.",
     "AppName": "COVID Shield",
     "LastCheckedMinutes": {
       "One": "Zuletzt vor {number} Minute aktualisiert",
@@ -44,7 +44,7 @@
     "SystemStatusOff": "AUS",
     "NotificationStatus": "Push Nachrichten sind ",
     "NotificationStatusOff": "AUS",
-    "TapPrompt": "Klick für mehr Informationen"
+    "TapPrompt": "Tappe für mehr Informationen"
   },
   "OverlayOpen": {
     "BluetoothCardStatus": "Bluetooth ist ",
@@ -61,7 +61,7 @@
     "ExposureNotificationCardStatus": "COVID-19 Kontakt Benachrichtigungen sind ",
     "ExposureNotificationCardStatusOff": "AUS",
     "ExposureNotificationCardBody": "COVID-19 Kontakt Benachrichtigungen werden benötigt damit COVID Shield funktioniert.",
-    "ExposureNotificationCardAction": "Schalte COVID-19 Kontakt Benachrichtigungen ein"
+    "ExposureNotificationCardAction": "COVID-19 Kontakt Benachrichtigungen einschalten"
   },
   "Info": {
     "CheckSymptoms": "Symptome nachlesen",
@@ -117,7 +117,7 @@
     "Title": "Schütze dich und andere",
     "Body1": "Werde benachrichtigt wenn du potenziell mit COVID-19 in Kontakt kamst.",
     "Body2": "Wenn du COVID-19 positiv getestet wurdest, kannst du anonym deine Daten teilen, sodass andere über potenzielle Ansteckung informiert werden können.",
-    "TutorialAction": "Lerne wie COVID Shield funktioniert"
+    "TutorialAction": "Erfahre wie COVID Shield funktioniert"
   },
   "Privacy": {
     "Title": "Datenschutzerklärung",
@@ -125,7 +125,7 @@
   },
   "ThankYou": {
     "Title": "Danke für deine Hilfe",
-    "Body": "COVID-19 Kontakt Benachrichtigungen sind an. Du wirst benachrichtigt, wenn COVID Shield einen möglichen Kontakt mit COVID-19 entdeckt.",
+    "Body": "COVID-19 Kontakt Benachrichtigungen sind eingeschaltet. Du wirst benachrichtigt, wenn COVID Shield einen möglichen Kontakt mit COVID-19 entdeckt.",
     "Dismiss": "Ablehnen"
   },
   "DataUpload": {
@@ -135,8 +135,8 @@
     "InfoSmall": "Deine zufälligen IDs werden nicht geteilt, bis du im nächsten Schritt zustimmst.",
     "ConsentTitle": "Teile deine zufälligen IDs",
     "ConsentBody": "Ein Gesundheitsexperte hat dir erlaubt deine zufälligen IDs zu teilen.",
-    "ConsentBody2": "If you share your random IDs, others with COVID Shield who have been near you in the past 14 days will receive a notification that they have possibly been exposed. This notification will not include any information about you.",
-    "ConsentBody3": "You will be notified once per day when new random IDs are available to be shared. You must grant permission each time for the random IDs to be shared. Sharing is voluntary.",
+    "ConsentBody2": "Wenn du zufällige IDs teilst, können andere die sich in der Vergangenheit in deiner Nähe aufgehalten haben eine Nachricht erhalten. Diese Nachricht ist anonym und enthält keine Information über dich.",
+    "ConsentBody3": "Du wirst täglich daran erinnert, deine neuen zufälligen IDs zu teilen. Du musst jedes mal zustimmen, um zu teilen. Teilen passiert freiwillig.",
     "PrivacyPolicyLink": "Datenschutzerklärung lesen",
     "ConsentAction": "Zustimmen",
     "ShareToast": "Zufällige IDs erfolgreich geteilt",

@@ -8,8 +8,8 @@
     "GuidanceUrl": "https://www.canada.ca/en/public-health/services/publications/diseases-conditions/covid-19-how-to-isolate-at-home.html",
     "SignalDataShared": "Danke, dass du hilfst die Ausbreitung zu verlangsamen.",
     "SignalDataSharedDetailed": {
-      "One": "Du bekommst eine Nachricht, die dich fragt deine zufälligen IDs zu teilen, im Laufe des nächsten Tages",
-      "Other": "Du bekommst täglich eine Nachricht, die dich fragt deine zufälligen IDs zu teilen, für die nächsten {number} Tage"
+      "One": "Im Laufe des nächsten Tages bekommst du eine Nachricht, die dich fragt deine zufälligen IDs zu teilen.",
+      "Other": "Für die nächsten {number} Tage bekommst du täglich eine Nachricht, die dich fragt deine zufälligen IDs zu teilen."
     },
     "SignalDataSharedCTA": "Verfolge deine Symptome",
     "SymptomTrackerUrl": "https://ca.thrive.health/covid19app/action/88a5e9a7-db9e-487b-bc87-ce35035f8e5c?from=/home&navigateTo=/tracker/complete",
@@ -19,9 +19,9 @@
     "BluetoothDisabled": "Bluetooth ist ausgeschaltet",
     "EnableBluetoothCTA": "COVID Shield benötigt Bluetooth um zufällige IDs zu teilen und sammeln.",
     "TurnOnBluetooth": "Bluetooth anschalten",
-    "ExposureNotificationsDisabled": "COVID-19 Kontakt Benachrichtigungen sind aus",
-    "ExposureNotificationsDisabledDetailed": "COVID-19 Kontakt Benachrichtigungen werden benötigt, damit COVID Shield funktioniert.",
-    "EnableExposureNotificationsCTA": "Schalte COVID-19 Kontakt Benachrichtigungen ein",
+    "ExposureNotificationsDisabled": "COVID-19-Kontaktmitteilungen sind aus",
+    "ExposureNotificationsDisabledDetailed": "COVID-19-Kontaktmitteilungen werden benötigt, damit COVID Shield funktioniert.",
+    "EnableExposureNotificationsCTA": "Schalte COVID-19-Kontaktmitteilungen ein",
     "NoConnectivity": "Keine Internetverbindung",
     "NoConnectivityDetailed": "COVID Shield benötigt eine Internetverbindung um mögliche Kontakte zu finden.",
     "AppName": "COVID Shield",
@@ -58,10 +58,10 @@
     "NotificationCardStatusOff": "AUS",
     "NotificationCardBody": "Du wirst keine Pushnachrichten bekommen, wenn du eventuell mit COVID-19 in Kontakt kamst. Zeitnahe Benachrichtigung über potenziellen Kontakt is wichtig um die Ausbreitung von COVID-19 zu verlangsamen",
     "NotificationCardAction": "Schalte Push Nachrichten",
-    "ExposureNotificationCardStatus": "COVID-19 Kontakt Benachrichtigungen sind ",
+    "ExposureNotificationCardStatus": "COVID-19-Kontaktmitteilungen sind ",
     "ExposureNotificationCardStatusOff": "AUS",
-    "ExposureNotificationCardBody": "COVID-19 Kontakt Benachrichtigungen werden benötigt damit COVID Shield funktioniert.",
-    "ExposureNotificationCardAction": "COVID-19 Kontakt Benachrichtigungen einschalten"
+    "ExposureNotificationCardBody": "COVID-19-Kontaktmitteilungen werden benötigt damit COVID Shield funktioniert.",
+    "ExposureNotificationCardAction": "COVID-19-Kontaktmitteilungen einschalten"
   },
   "Info": {
     "CheckSymptoms": "Symptome nachlesen",
@@ -125,7 +125,7 @@
   },
   "ThankYou": {
     "Title": "Danke für deine Hilfe",
-    "Body": "COVID-19 Kontakt Benachrichtigungen sind eingeschaltet. Du wirst benachrichtigt, wenn COVID Shield einen möglichen Kontakt mit COVID-19 entdeckt.",
+    "Body": "COVID-19-Kontaktmitteilungen sind eingeschaltet. Du wirst benachrichtigt, wenn COVID Shield einen möglichen Kontakt mit COVID-19 entdeckt.",
     "Dismiss": "Ablehnen"
   },
   "DataUpload": {

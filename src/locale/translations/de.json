@@ -1,0 +1,158 @@
+{
+  "Home": {
+    "NoExposureDetected": "Kein Kontakt mit COVID-19 gefunden",
+    "NoExposureDetectedDetailed": "Den zufälligen IDs nach zu urteilen, warst du in den letzten 14 Tagen nicht in der Nähe einer Person, die positiv auf COVID-19 getestet wurde. ",
+    "ExposureDetected": "Du bist eventuell mit COVID-19 in Kontakt gekommen",
+    "ExposureDetectedDetailed": "Den zufälligen IDs nach zu urteilen, warst du in den letzten 14 Tagen in der Nähe einer Person, die positiv auf COVID-19 getestet wurde. ",
+    "SeeGuidance": "Lies die kanadische COVID-19 Handlungsempfehlung",
+    "GuidanceUrl": "https://www.canada.ca/en/public-health/services/publications/diseases-conditions/covid-19-how-to-isolate-at-home.html",
+    "SignalDataShared": "Danke, dass du hilfst die Ausbreitung zu verlangsamen.",
+    "SignalDataSharedDetailed": {
+      "One": "Im Laufe des nächsten Tages bekommst du eine Nachricht, die dich fragt deine zufälligen IDs zu teilen.",
+      "Other": "Für die nächsten {number} Tage bekommst du täglich eine Nachricht, die dich fragt deine zufälligen IDs zu teilen."
+    },
+    "SignalDataSharedCTA": "Verfolge deine Symptome",
+    "SymptomTrackerUrl": "https://ca.thrive.health/covid19app/action/88a5e9a7-db9e-487b-bc87-ce35035f8e5c?from=/home&navigateTo=/tracker/complete",
+    "DailyShare": "Teile deine neuen zufälligen IDs",
+    "DailyShareDetailed": "Das Teilen deiner Daten hilft anderen herauszufinden, ob sie mit COVID-19 in Kontakt kamen.",
+    "ShareRandomIDsCTA": "Teile deine zufälligen IDs",
+    "BluetoothDisabled": "Bluetooth ist ausgeschaltet",
+    "EnableBluetoothCTA": "COVID Shield benötigt Bluetooth um zufällige IDs zu teilen und sammeln.",
+    "TurnOnBluetooth": "Bluetooth anschalten",
+    "ExposureNotificationsDisabled": "COVID-19-Kontaktmitteilungen sind aus",
+    "ExposureNotificationsDisabledDetailed": "COVID-19-Kontaktmitteilungen werden benötigt, damit COVID Shield funktioniert.",
+    "EnableExposureNotificationsCTA": "Schalte COVID-19-Kontaktmitteilungen ein",
+    "NoConnectivity": "Keine Internetverbindung",
+    "NoConnectivityDetailed": "COVID Shield benötigt eine Internetverbindung um mögliche Kontakte zu finden.",
+    "AppName": "COVID Shield",
+    "LastCheckedMinutes": {
+      "One": "Zuletzt vor {number} Minute aktualisiert",
+      "Other": "Zuletzt vor {number} Minuten aktualisiert"
+    },
+    "LastCheckedHours": {
+      "One": "Zuletzt vor {number} Stunde aktualisiert",
+      "Other": "Zuletzt vor {number} Stunden aktualisiert"
+    },
+    "LastCheckedDays": {
+      "One": "Zuletzt vor {number} Tag aktualisiert",
+      "Other": "Zuletzt vor {number} Tagen aktualisiert"
+    }
+  },
+  "OverlayClosed": {
+    "SystemStatus": "COVID Shield ist ",
+    "SystemStatusOn": "AN",
+    "SystemStatusOff": "AUS",
+    "NotificationStatus": "Push Nachrichten sind ",
+    "NotificationStatusOff": "AUS",
+    "TapPrompt": "Tappe für mehr Informationen"
+  },
+  "OverlayOpen": {
+    "BluetoothCardStatus": "Bluetooth ist ",
+    "BluetoothCardStatusOff": "AUS",
+    "BluetoothCardBody": "COVID Shield benötigt Bluetooth um zufällige IDs zu teilen und sammeln.",
+    "BluetoothCardAction": "Schalte Bluetooth ein",
+    "EnterCodeCardTitle": "COVID Shield Code",
+    "EnterCodeCardBody": "Hat ein Gesundheitsexperte dich gefragt deinen COVID Shield Code einzugeben?",
+    "EnterCodeCardAction": "Code eingeben",
+    "NotificationCardStatus": "Pushnachrichten sind ",
+    "NotificationCardStatusOff": "AUS",
+    "NotificationCardBody": "Du wirst keine Pushnachrichten bekommen, wenn du eventuell mit COVID-19 in Kontakt kamst. Zeitnahe Benachrichtigung über potenziellen Kontakt is wichtig um die Ausbreitung von COVID-19 zu verlangsamen",
+    "NotificationCardAction": "Schalte Push Nachrichten",
+    "ExposureNotificationCardStatus": "COVID-19-Kontaktmitteilungen sind ",
+    "ExposureNotificationCardStatusOff": "AUS",
+    "ExposureNotificationCardBody": "COVID-19-Kontaktmitteilungen werden benötigt damit COVID Shield funktioniert.",
+    "ExposureNotificationCardAction": "COVID-19-Kontaktmitteilungen einschalten"
+  },
+  "Info": {
+    "CheckSymptoms": "Symptome nachlesen",
+    "SymptomsUrl": "https://ca.thrive.health/covid19/en",
+    "TellAFriend": "Teile die App",
+    "LearnMore": "Wie COVID Shield funktioniert",
+    "ChangeLanguage": "Sprache ändern",
+    "Privacy": "Datenschutzerklärung lesen"
+  },
+  "LanguageSelect": {
+    "Title": "Language",
+    "En": "English (Canada)",
+    "Fr": "Français (Canada)",
+    "De": "Deutsch",
+    "EnShort": "English",
+    "FrShort": "Français",
+    "DeShort": "Deutsch",
+    "Close": "Zurück"
+  },
+  "Tutorial": {
+    "step-1Title": "Wie COVID Shield funktioniert",
+    "step-1": "Dein Handy benutzt Bluetooth um zufällige IDs mit Handys, die in deiner Nähe sind und die App installiert, zu teilen und sammeln. Diese IDs werden sicher und nur auf jedem Handy gespeichert.",
+    "step-2Title": "Wenn du potenziell Kontakt COVID-19 hattest.",
+    "step-2": "Wenn du dich in den letzten 14 Tagen in der Nähe einer Person aufgehalten hast, die COVID-19 positiv ist, wirst du benachrichtigt.",
+    "step-3Title": "Wenn du positiv auf COVID-19 getestet wurdest",
+    "step-3": "Benachrichtige andere, die sich in den letzten 14 Tagen in deiner Nähe aufgehalten haben, anonym darüber, dass sie eventuell Kontakt mit COVID-19 hatten.",
+    "ActionBack": "Zurück",
+    "ActionNext": "Weiter",
+    "ActionEnd": "Fertig",
+    "Close": "Schließen"
+  },
+  "Sharing": {
+    "Title": "App teilen",
+    "SubTitle": "Jede Person, die COVID Shield benutzt, hilft die Ausbreitung von COVID-19 zu verlangsamen. Beim Teilen werden keine persönlichen Informationen preisgegeben.",
+    "Platform-messages": "Bei Messages teilen",
+    "Platform-instagram": "Bei Instagram teilen",
+    "More": "Mehr Apps",
+    "Message": "Hilf mit die Ausbreitung von COVID-19 zu verlangsamen. Lade die COVID Shield App herunter: https://covidshield.app",
+    "Close": "Schließen"
+  },
+  "Onboarding": {
+    "ActionNext": "Weiter",
+    "ActionEnd": "Fertig",
+    "ActionBack": "Zurück"
+  },
+  "OnboardingPermissions": {
+    "Title": "Deine Daten sind privat",
+    "Body": "COVID Shield ist datensparsam.",
+    "Body2": "Deine zufälligen IDs werden nur auf deinem Handy gespeichert außer du entscheidest dich sie zu teilen.",
+    "Body3": "Das Benutzen von COVID Shield ist freiwillig. Du kannst deine zufälligen IDs jederzeit löschen."
+  },
+  "OnboardingStart": {
+    "Title": "Schütze dich und andere",
+    "Body1": "Werde benachrichtigt, wenn du potenziell mit COVID-19 in Kontakt kamst.",
+    "Body2": "Wenn du COVID-19 positiv getestet wurdest, kannst du anonym deine Daten teilen, sodass andere über potenzielle Ansteckung informiert werden können.",
+    "TutorialAction": "Erfahre wie COVID Shield funktioniert"
+  },
+  "Privacy": {
+    "Title": "Datenschutzerklärung",
+    "Close": "Schließen"
+  },
+  "ThankYou": {
+    "Title": "Danke für deine Hilfe",
+    "Body": "COVID-19-Kontaktmitteilungen sind eingeschaltet. Du wirst benachrichtigt, wenn COVID Shield einen möglichen Kontakt mit COVID-19 entdeckt.",
+    "Dismiss": "Ablehnen"
+  },
+  "DataUpload": {
+    "Cancel": "Abbrechen",
+    "FormIntro": "Bitte gib deinen 8-stelligen COVID Shield Code ein.",
+    "Action": "Code abschicken",
+    "InfoSmall": "Deine zufälligen IDs werden nicht geteilt, bis du im nächsten Schritt zustimmst.",
+    "ConsentTitle": "Teile deine zufälligen IDs",
+    "ConsentBody": "Ein Gesundheitsexperte hat dir erlaubt deine zufälligen IDs zu teilen.",
+    "ConsentBody2": "Wenn du zufällige IDs teilst, können andere die sich in der Vergangenheit in deiner Nähe aufgehalten haben eine Nachricht erhalten. Diese Nachricht ist anonym und enthält keine Information über dich.",
+    "ConsentBody3": "Du wirst täglich daran erinnert, deine neuen zufälligen IDs zu teilen. Du musst jedes Mal zustimmen, um zu teilen. Teilen passiert freiwillig.",
+    "PrivacyPolicyLink": "Datenschutzerklärung lesen",
+    "ConsentAction": "Zustimmen",
+    "ShareToast": "Zufällige IDs erfolgreich geteilt",
+    "ErrorTitle": "Code nicht erkannt",
+    "ErrorBody": "Dein COVID Shield Code wurde nicht erkannt. Bitte versuche es erneut.",
+    "ErrorAction": "OK"
+  },
+  "Notification": {
+    "ExposedMessageTitle": "Du hattest möglicherweise Kontakt mit COVID-19",
+    "ExposedMessageBody": "Deine zufälligen IDs zeigen, dass du in den letzten 14 Tagen in der Nähe einer Person warst, die positiv auf COVID-19 getestet wurde.",
+    "OffMessageTitle": "COVID Shield ist aus",
+    "OffMessageBody": "Schalte COVID Shield ein um benachrichtigt zu werden wenn du eventuell Kontakt mit COVID-19 hast.",
+    "DailyUploadNotificationTitle": "Teile deine neuen zufälligen IDs",
+    "DailyUploadNotificationBody": "Das Teilen deiner Daten hilft anderen zu wissen, ob sie eventuell Kontakt mit COVID-19 hatten."
+  },
+  "Partners": {
+    "Label": "Entwickelt in Partnerschaft mit"
+  }
+}

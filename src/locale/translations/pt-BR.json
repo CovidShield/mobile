@@ -154,5 +154,8 @@
   },
   "Partners": {
     "Label": "Desenvolvido em parceria com"
+  },
+  "BottomSheet": {
+    "Collapse": "Collapse"
   }
 }

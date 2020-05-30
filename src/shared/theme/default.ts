@@ -4,6 +4,7 @@ export const palette = {
   brandBlue: '#002D42',
   linkBlue: '#0278A4',
   bodyBlack: '#212121',
+  black: '#000000',
   bodySubdued: '#5B5B5B',
   greenBright: '#A4DE82',
   white: '#FFFFFF',
@@ -178,11 +179,8 @@ const darkTheme = {
   ...lightTheme,
   colors: {
     ...lightTheme.colors,
-    mainBackground: palette.bodyBlack,
-    mainForeground: palette.white,
-
-    secondaryCardBackground: palette.bodySubdued,
-    secondaryCardText: palette.white,
+    mainBackground: palette.black,
+    overlayBackground: palette.bodyBlack,
   },
 };
 

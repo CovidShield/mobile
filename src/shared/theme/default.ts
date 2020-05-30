@@ -1,3 +1,5 @@
+import {Appearance} from 'react-native';
+
 export const palette = {
   brandBlue: '#002D42',
   linkBlue: '#0278A4',
@@ -21,7 +23,7 @@ export const palette = {
   fadedYellow: '#FFF5D9',
 };
 
-const theme = {
+const lightTheme = {
   colors: {
     mainBackground: palette.brandBlue,
     overlayBackground: palette.white,
@@ -171,6 +173,21 @@ const theme = {
   },
   maxContentWidth: 500,
 };
+
+const darkTheme = {
+  ...lightTheme,
+  colors: {
+    ...lightTheme.colors,
+    mainBackground: palette.bodyBlack,
+    mainForeground: palette.white,
+
+    secondaryCardBackground: palette.bodySubdued,
+    secondaryCardText: palette.white,
+  },
+};
+
+const colorScheme = Appearance.getColorScheme();
+const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
 
 export type Theme = typeof theme;
 export default theme;

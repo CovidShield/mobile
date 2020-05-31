@@ -61,7 +61,7 @@ export class ExposureNotificationService {
   storage: PersistencyProvider;
   secureStorage: SecurePersistencyProvider;
 
-  private exposureStatusUpdatePromise: Promise<ExposureStatus> | null = null;
+  private isUpdatingExposureStatus = false;
 
   constructor(
     backendInterface: BackendInterface,
@@ -81,7 +81,12 @@ export class ExposureNotificationService {
   }
 
   async start(): Promise<void> {
-    await this.exposureNotification.start();
+    try {
+      await this.exposureNotification.start();
+    } catch (_) {
+      // Noop due to ExposureNotification framework is not available on device
+      return;
+    }
     // we check the lastCheckTimeStamp on start to make sure it gets populated even if the server doesn't run
     const timestamp = await this.storage.getItem('lastCheckTimeStamp');
     const submissionCycleStartedAtStr = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
@@ -100,13 +105,15 @@ export class ExposureNotificationService {
   }
 
   async updateSystemStatus(): Promise<SystemStatus> {
-    const status = await this.exposureNotification.getStatus();
+    const status = await this.exposureNotification.getStatus().catch(() => SystemStatus.Disabled);
     this.systemStatus.set(status);
     return this.systemStatus.value;
   }
 
   async updateExposureStatusInBackground() {
-    const status = await this.updateExposureStatus();
+    if (this.systemStatus.value !== SystemStatus.Active) return;
+    await this.updateExposureStatus();
+    const status = this.exposureStatus.value;
     if (status.type === 'exposed') {
       PushNotification.presentLocalNotification({
         alertTitle: this.translate('Notification.ExposedMessageTitle'),
@@ -122,19 +129,15 @@ export class ExposureNotificationService {
     }
   }
 
-  async submissionCycleEndsAt(): Promise<Date> {
-    const cycleStart = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
-    return addDays(cycleStart ? new Date(parseInt(cycleStart, 10)) : new Date(), 14);
-  }
-
-  async updateExposureStatus(): Promise<ExposureStatus> {
-    if (this.exposureStatusUpdatePromise) return this.exposureStatusUpdatePromise;
+  async updateExposureStatus() {
+    if (this.systemStatus.value !== SystemStatus.Active) return;
+    if (this.isUpdatingExposureStatus) return;
+    this.isUpdatingExposureStatus = true;
     const cleanUpPromise = <T>(input: T): T => {
-      this.exposureStatusUpdatePromise = null;
+      this.isUpdatingExposureStatus = false;
       return input;
     };
-    this.exposureStatusUpdatePromise = this.performExposureStatusUpdate().then(cleanUpPromise, cleanUpPromise);
-    return this.exposureStatusUpdatePromise;
+    await this.performExposureStatusUpdate().then(cleanUpPromise, cleanUpPromise);
   }
 
   async startKeysSubmission(oneTimeCode: string): Promise<void> {
@@ -160,6 +163,11 @@ export class ExposureNotificationService {
 
     await this.backendInterface.reportDiagnosisKeys(auth, diagnosisKeys);
     await this.recordKeySubmission();
+  }
+
+  private async submissionCycleEndsAt(): Promise<Date> {
+    const cycleStart = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
+    return addDays(cycleStart ? new Date(parseInt(cycleStart, 10)) : new Date(), 14);
   }
 
   private async *keysSinceLastFetch(lastFetchDate?: Date): AsyncGenerator<string> {

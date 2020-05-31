@@ -72,7 +72,7 @@ export class ExposureNotificationService {
   ) {
     this.translate = translate;
     this.exposureNotification = exposureNotification;
-    this.systemStatus = new Observable<SystemStatus>(SystemStatus.Active);
+    this.systemStatus = new Observable<SystemStatus>(SystemStatus.Disabled);
     this.exposureStatus = new Observable<ExposureStatus>({type: 'monitoring'});
     this.backendInterface = backendInterface;
     this.storage = storage;

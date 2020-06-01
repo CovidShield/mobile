@@ -28,9 +28,14 @@ describe('ExposureNotificationService', () => {
   let service: ExposureNotificationService;
 
   const OriginalDate = global.Date;
-  const dateSpy = jest.spyOn(global, 'Date');
+  const dateSpy: jest.SpyInstance<Date, any> = jest.spyOn(global, 'Date') as any;
+  const mockSystemStatus: Mock<PropTy typeof ExposureNotificationService['systemStatus']> = jest.fn();
+
   beforeEach(() => {
     service = new ExposureNotificationService(server, translate, storage, secureStorage, bridge);
+    Object.defineProperty(service, 'systemStatus', {
+      value: jest.fn(),
+    });
   });
 
   afterEach(() => {
@@ -38,31 +43,39 @@ describe('ExposureNotificationService', () => {
     dateSpy.mockReset();
   });
 
-  it('backfills keys when last timestamp not avialble', async () => {
-    dateSpy
-      .mockImplementationOnce(() => new OriginalDate('2020-05-19T07:10:00+0000'))
-      .mockImplementation((args: any) => new OriginalDate(args));
+  describe('updateExposureStatus', () => {
+    it('does not run when systemStatus is not active', () => {
+      server.
 
-    await service.updateExposureStatus();
-    expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(168);
-  });
-
-  it('backfills the right amount of keys for current day', async () => {
-    dateSpy.mockImplementation((args: any) => {
-      if (args === undefined) return new OriginalDate('2020-05-19T07:10:00+0000');
-      return new OriginalDate(args);
+      await service.updateExposureStatus();
     });
 
-    storage.getItem.mockResolvedValue(new OriginalDate('2020-05-19T04:10:00+0000').getTime());
+    it('backfills keys when last timestamp not avialble', async () => {
+      dateSpy
+        .mockImplementationOnce(() => new OriginalDate('2020-05-19T07:10:00+0000'))
+        .mockImplementation((args: any) => new OriginalDate(args));
 
-    await service.updateExposureStatus();
-    expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(1);
+      await service.updateExposureStatus();
+      expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(168);
+    });
 
-    server.retrieveDiagnosisKeys.mockClear();
-    storage.getItem.mockResolvedValue(new OriginalDate('2020-05-19T03:10:00+0000').getTime());
+    it('backfills the right amount of keys for current day', async () => {
+      dateSpy.mockImplementation((args: any) => {
+        if (args === undefined) return new OriginalDate('2020-05-19T07:10:00+0000');
+        return new OriginalDate(args);
+      });
 
-    await service.updateExposureStatus();
-    expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(2);
+      storage.getItem.mockResolvedValue(new OriginalDate('2020-05-19T04:10:00+0000').getTime());
+
+      await service.updateExposureStatus();
+      expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(1);
+
+      server.retrieveDiagnosisKeys.mockClear();
+      storage.getItem.mockResolvedValue(new OriginalDate('2020-05-19T03:10:00+0000').getTime());
+
+      await service.updateExposureStatus();
+      expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(2);
+    });
   });
 
   it('serializes status update', async () => {

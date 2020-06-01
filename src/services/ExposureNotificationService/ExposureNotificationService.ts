@@ -1,6 +1,6 @@
 import ExposureNotification, {ExposureInformation, Status as SystemStatus} from 'bridge/ExposureNotification';
 import PushNotification from 'bridge/PushNotification';
-import {Observable} from 'shared/Observable';
+import {MutableObservable, Observable} from 'shared/Observable';
 import {addDays, daysBetween, periodSinceEpoch} from 'shared/date-fns';
 
 import {BackendInterface, SubmissionKeySet} from '../BackendService';
@@ -51,15 +51,23 @@ export interface SecureStorageOptions {
 }
 
 export class ExposureNotificationService {
-  systemStatus: Observable<SystemStatus>;
-  exposureStatus: Observable<ExposureStatus>;
+  public get exposureStatus(): Observable<ExposureStatus> {
+    return this.exposureStatusInternal;
+  }
 
-  exposureNotification: typeof ExposureNotification;
-  backendInterface: BackendInterface;
+  public get systemStatus(): Observable<SystemStatus> {
+    return this.systemStatusInternal;
+  }
 
-  translate: Translate;
-  storage: PersistencyProvider;
-  secureStorage: SecurePersistencyProvider;
+  private exposureStatusInternal: MutableObservable<ExposureStatus>;
+  private systemStatusInternal: MutableObservable<SystemStatus>;
+
+  private backendInterface: BackendInterface;
+  private exposureNotification: typeof ExposureNotification;
+
+  private secureStorage: SecurePersistencyProvider;
+  private storage: PersistencyProvider;
+  private translate: Translate;
 
   private isUpdatingExposureStatus = false;
 
@@ -70,13 +78,16 @@ export class ExposureNotificationService {
     secureStorage: SecurePersistencyProvider,
     exposureNotification: typeof ExposureNotification,
   ) {
-    this.translate = translate;
-    this.exposureNotification = exposureNotification;
-    this.systemStatus = new Observable<SystemStatus>(SystemStatus.Disabled);
-    this.exposureStatus = new Observable<ExposureStatus>({type: 'monitoring'});
-    this.backendInterface = backendInterface;
-    this.storage = storage;
+    this.systemStatusInternal = new MutableObservable<SystemStatus>(SystemStatus.Disabled);
+    this.exposureStatusInternal = new MutableObservable<ExposureStatus>({type: 'monitoring'});
+
     this.secureStorage = secureStorage;
+    this.storage = storage;
+    this.translate = translate;
+
+    this.exposureNotification = exposureNotification;
+    this.backendInterface = backendInterface;
+
     this.start();
   }
 
@@ -91,7 +102,7 @@ export class ExposureNotificationService {
     const timestamp = await this.storage.getItem('lastCheckTimeStamp');
     const submissionCycleStartedAtStr = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
     if (submissionCycleStartedAtStr) {
-      this.exposureStatus.set({
+      this.exposureStatusInternal.set({
         type: 'diagnosed',
         cycleEndsAt: addDays(new Date(parseInt(submissionCycleStartedAtStr, 10)), 14),
         // let updateExposureStatus() deal with that
@@ -99,21 +110,21 @@ export class ExposureNotificationService {
       });
     }
     if (timestamp) {
-      this.exposureStatus.set({...this.exposureStatus.get(), lastChecked: timestamp});
+      this.exposureStatusInternal.set({...this.exposureStatus.get(), lastChecked: timestamp});
     }
     await this.updateExposureStatus();
   }
 
   async updateSystemStatus(): Promise<SystemStatus> {
     const status = await this.exposureNotification.getStatus().catch(() => SystemStatus.Disabled);
-    this.systemStatus.set(status);
-    return this.systemStatus.value;
+    this.systemStatusInternal.set(status);
+    return this.systemStatus.get();
   }
 
   async updateExposureStatusInBackground() {
-    if (this.systemStatus.value !== SystemStatus.Active) return;
+    if (this.systemStatus.get() !== SystemStatus.Active) return;
     await this.updateExposureStatus();
-    const status = this.exposureStatus.value;
+    const status = this.exposureStatus.get();
     if (status.type === 'exposed') {
       PushNotification.presentLocalNotification({
         alertTitle: this.translate('Notification.ExposedMessageTitle'),
@@ -130,7 +141,7 @@ export class ExposureNotificationService {
   }
 
   async updateExposureStatus() {
-    if (this.systemStatus.value !== SystemStatus.Active) return;
+    if (this.systemStatus.get() !== SystemStatus.Active) return;
     if (this.isUpdatingExposureStatus) return;
     this.isUpdatingExposureStatus = true;
     const cleanUpPromise = <T>(input: T): T => {
@@ -146,7 +157,7 @@ export class ExposureNotificationService {
     await this.secureStorage.setItem(SUBMISSION_AUTH_KEYS, serialized, SECURE_OPTIONS);
     const submissionCycleStartAt = new Date();
     this.storage.setItem(SUBMISSION_CYCLE_STARTED_AT, submissionCycleStartAt.getTime().toString());
-    this.exposureStatus.set({
+    this.exposureStatusInternal.set({
       type: 'diagnosed',
       needsSubmission: true,
       cycleEndsAt: addDays(submissionCycleStartAt, 14),
@@ -186,7 +197,7 @@ export class ExposureNotificationService {
     const currentStatus = this.exposureStatus.get();
     if (currentStatus.type === 'diagnosed') {
       await this.storage.setItem(SUBMISSION_LAST_COMPLETED_AT, new Date().getTime().toString());
-      this.exposureStatus.set({...currentStatus, needsSubmission: false});
+      this.exposureStatusInternal.set({...currentStatus, needsSubmission: false});
     }
   }
 
@@ -221,7 +232,7 @@ export class ExposureNotificationService {
 
     const finalize = (status: ExposureStatus) => {
       const timestamp = `${new Date().getTime()}`;
-      this.exposureStatus.set({...status, lastChecked: timestamp});
+      this.exposureStatusInternal.set({...status, lastChecked: timestamp});
       this.storage.setItem('lastCheckTimeStamp', timestamp);
       return this.exposureStatus.get();
     };

@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {Observable} from 'shared/Observable';
+import {MutableObservable} from 'shared/Observable';
 
 enum Key {
   IsOnboarded = 'IsOnboarded',
@@ -7,15 +7,15 @@ enum Key {
 }
 
 export class StorageService {
-  isOnboarding: Observable<boolean>;
-  locale: Observable<string>;
+  isOnboarding: MutableObservable<boolean>;
+  locale: MutableObservable<string>;
 
-  ready: Observable<boolean>;
+  ready: MutableObservable<boolean>;
 
   constructor() {
-    this.isOnboarding = new Observable<boolean>(true);
-    this.locale = new Observable<string>('en');
-    this.ready = new Observable<boolean>(false);
+    this.isOnboarding = new MutableObservable<boolean>(true);
+    this.locale = new MutableObservable<string>('en');
+    this.ready = new MutableObservable<boolean>(false);
     this.init();
   }
 
@@ -33,7 +33,7 @@ export class StorageService {
     const isOnboarded = (await AsyncStorage.getItem(Key.IsOnboarded)) === '1';
     this.isOnboarding.set(!isOnboarded);
 
-    const locale = (await AsyncStorage.getItem(Key.Locale)) || this.locale.value;
+    const locale = (await AsyncStorage.getItem(Key.Locale)) || this.locale.get();
     this.locale.set(locale);
 
     this.ready.set(true);

@@ -16,6 +16,7 @@ class Subscription<T> {
     this.active = false;
   }
 }
+
 class ObserverPropagationError extends Error {
   constructor(currentValue: any, newValue: any) {
     super();
@@ -82,8 +83,8 @@ class Subscriptions<T> {
 }
 
 export class Observable<T> {
-  value: T;
-  subscriptions: Subscriptions<T> = new Subscriptions();
+  private value: T;
+  private subscriptions: Subscriptions<T> = new Subscriptions();
 
   constructor(defaultValue: T) {
     this.value = defaultValue;
@@ -93,12 +94,18 @@ export class Observable<T> {
     return this.value;
   }
 
-  set(value: T): void {
+  observe(cb: (value: T) => void): () => void {
+    return this.subscriptions.add(cb);
+  }
+
+  protected set(value: T): void {
     this.value = value;
     this.subscriptions.propagate(value);
   }
+}
 
-  observe(cb: (value: T) => void): () => void {
-    return this.subscriptions.add(cb);
+export class MutableObservable<T> extends Observable<T> {
+  public set(value: T) {
+    return super.set(value);
   }
 }

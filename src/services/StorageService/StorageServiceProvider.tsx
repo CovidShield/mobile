@@ -21,10 +21,10 @@ export const StorageServiceProvider = ({children}: StorageServiceProviderProps) 
 export const useStorage = () => {
   const storageService = useContext(StorageServiceContext)!;
 
-  const [isOnboarding, setIsOnboarding] = useState(storageService.isOnboarding.value);
+  const [isOnboarding, setIsOnboarding] = useState(storageService.isOnboarding.get());
   const setOnboarded = useMemo(() => storageService.setOnboarded, [storageService.setOnboarded]);
 
-  const [locale, setLocaleInternal] = useState(storageService.locale.value);
+  const [locale, setLocaleInternal] = useState(storageService.locale.get());
   const setLocale = useMemo(() => storageService.setLocale, [storageService.setLocale]);
 
   useEffect(() => storageService.isOnboarding.observe(setIsOnboarding), [storageService.isOnboarding]);

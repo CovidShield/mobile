@@ -1,10 +1,10 @@
 import React, {useCallback} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {Linking, ScrollView, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Box, Toolbar} from 'components';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useI18n} from '@shopify/react-i18n';
-import Markdown from 'react-native-markdown-display';
+import Markdown, {RenderRules, RenderFunction} from 'react-native-markdown-display';
 import privacyPolicyEn from 'assets/privacypolicy';
 import privacyPolicyFr from 'assets/privacypolicy-fr';
 
@@ -12,6 +12,34 @@ export const PrivacyScreen = () => {
   const navigation = useNavigation();
   const [i18n] = useI18n();
   const close = useCallback(() => navigation.goBack(), [navigation]);
+
+  const openUrl = (url: string) => {
+    Linking.openURL(url);
+  };
+
+  const renderHeader: RenderFunction = (node, children, styles: any) => (
+    <Text key={node.key} style={[styles.heading, styles.heading1]} accessibilityRole="header">
+      {children}
+    </Text>
+  );
+
+  const renderLink: RenderFunction = (node: any, children: React.ReactNode[], styles: any) => (
+    <TouchableWithoutFeedback
+      key={node.key}
+      style={styles.link}
+      onPress={() => openUrl(node.attributes.href)}
+      accessibilityLabel={children.toString()}
+      accessibilityHint={i18n.translate('Home.ExternalLinkHint')}
+      accessibilityRole="link"
+    >
+      <Text style={styles.link}>{children}</Text>
+    </TouchableWithoutFeedback>
+  );
+
+  const rules: RenderRules = {
+    link: renderLink,
+    heading1: renderHeader,
+  };
 
   return (
     <Box backgroundColor="overlayBackground" flex={1}>
@@ -29,6 +57,7 @@ export const PrivacyScreen = () => {
               style={{
                 body: styles.bodyContent,
               }}
+              rules={rules}
             >
               {i18n.locale === 'en' ? privacyPolicyEn : privacyPolicyFr}
             </Markdown>

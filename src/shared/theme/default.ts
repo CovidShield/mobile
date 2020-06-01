@@ -1,8 +1,10 @@
 import {Appearance} from 'react-native';
+import {useBackButton} from "@react-navigation/native";
 
 export const palette = {
   brandBlue: '#002D42',
   linkBlue: '#0278A4',
+  darkBlue: '#0A84FE',
   bodyBlack: '#212121',
   black: '#000000',
   bodySubdued: '#5B5B5B',
@@ -46,6 +48,8 @@ const lightTheme = {
     infoBlockBlackText: palette.white,
     infoBlockYellowBackground: palette.fadedYellow,
     divider: palette.fadedWhite,
+    blue: palette.linkBlue,
+    startButtonColor: palette.white,
   },
   spacing: {
     /* eslint-disable id-length */
@@ -115,7 +119,7 @@ const lightTheme = {
   },
   buttonVariants: {
     bigFlat: {
-      color: palette.linkBlue,
+      color: 'blue',
       height: 52,
       textColor: palette.white,
       fontFamily: 'Nunito',
@@ -126,10 +130,10 @@ const lightTheme = {
         textColor: palette.bodyBlack,
       },
     },
-    bigFlatWhite: {
-      color: palette.white,
+    start: {
+      color: 'startButtonColor',
       height: 52,
-      textColor: palette.linkBlue,
+      textColor: 'blue',
       fontFamily: 'Nunito',
       fontSize: 18,
       borderWidth: undefined,
@@ -156,7 +160,7 @@ const lightTheme = {
     text: {
       color: 'transparent',
       height: 44,
-      textColor: palette.linkBlue,
+      textColor: 'blue',
       fontFamily: 'Nunito',
       fontSize: 18,
       borderWidth: undefined,
@@ -184,6 +188,8 @@ const darkTheme = {
     infoBlockNeutralBackground: palette.darkGrey,
     overlayBodyText: palette.white,
     bodyTextSubdued: palette.fadedTextWhite,
+    blue: palette.darkBlue,
+    startButtonColor: palette.bodySubdued,
   },
 };
 

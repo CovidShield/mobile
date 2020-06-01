@@ -37,7 +37,7 @@ export const Start = () => {
         <Box flexDirection="row" justifyContent="space-around" alignItems="center" marginBottom="l">
           <Button
             text={i18n.translate('OnboardingStart.TutorialAction')}
-            variant="bigFlatWhite"
+            variant="start"
             onPress={() => navigation.navigate('Tutorial')}
           />
         </Box>

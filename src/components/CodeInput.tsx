@@ -1,5 +1,6 @@
 import React, {useCallback, useRef} from 'react';
 import {TextInput, TouchableWithoutFeedback, StyleSheet} from 'react-native';
+import {useScreenReaderEnabled} from 'shared/useScreenReaderEnabled';
 
 import {Box} from './Box';
 import {Text} from './Text';
@@ -22,6 +23,7 @@ export interface CodeInputProps {
 }
 
 export const CodeInput = ({value, onChange, accessibilityLabel}: CodeInputProps) => {
+  const screenReaderEnabled = useScreenReaderEnabled();
   const inputRef = useRef<TextInput>(null);
   const onChangeTrimmed = useCallback(text => onChange(text.trim()), [onChange]);
 
@@ -65,6 +67,7 @@ export const CodeInput = ({value, onChange, accessibilityLabel}: CodeInputProps)
         caretHidden
         maxLength={8}
         style={styles.input}
+        autoFocus={!screenReaderEnabled}
       />
       <TouchableWithoutFeedback
         onPress={giveFocus}

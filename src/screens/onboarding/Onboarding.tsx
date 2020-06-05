@@ -79,7 +79,7 @@ export const OnboardingScreen = () => {
   }, []);
 
   return (
-    <Box flex={1} backgroundColor="overlayBackground">
+    <Box flex={1} backgroundColor="onboardingBackground">
       <SafeAreaView style={styles.flex}>
         <Header isOverlay />
         <Box flex={1} justifyContent="center" onLayout={onLayout}>

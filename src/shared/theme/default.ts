@@ -1,5 +1,4 @@
 import {Appearance} from 'react-native';
-import {useBackButton} from "@react-navigation/native";
 
 export const palette = {
   brandBlue: '#002D42',
@@ -30,6 +29,7 @@ const lightTheme = {
   colors: {
     mainBackground: palette.brandBlue,
     overlayBackground: palette.white,
+    onboardingBackground: palette.white,
     overlayBodyText: palette.bodyBlack,
     fadedBackground: palette.fadedWhite,
     bodyText: palette.white,
@@ -185,6 +185,7 @@ const darkTheme = {
     ...lightTheme.colors,
     mainBackground: palette.black,
     overlayBackground: palette.bodyBlack,
+    onboardingBackground: palette.black,
     infoBlockNeutralBackground: palette.darkGrey,
     overlayBodyText: palette.white,
     bodyTextSubdued: palette.fadedTextWhite,

@@ -52,7 +52,7 @@ export const TutorialScreen = () => {
   }, []);
 
   return (
-    <Box backgroundColor="overlayBackground" flex={1}>
+    <Box backgroundColor="onboardingBackground" flex={1}>
       <SafeAreaView style={styles.flex}>
         <Toolbar
           title=""

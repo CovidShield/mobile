@@ -2,6 +2,7 @@ import ExposureNotification, {ExposureInformation, Status as SystemStatus} from 
 import PushNotification from 'bridge/PushNotification';
 import {Observable} from 'shared/Observable';
 import {addDays, daysBetween, periodSinceEpoch} from 'shared/date-fns';
+import {unzip} from 'react-native-zip-archive';
 
 import {BackendInterface, SubmissionKeySet} from '../BackendService';
 
@@ -15,6 +16,7 @@ const SECURE_OPTIONS = {
 };
 
 type Translate = (key: string) => string;
+const hoursPerPeriod = 6;
 
 export {SystemStatus};
 
@@ -168,15 +170,32 @@ export class ExposureNotificationService {
     await this.recordKeySubmission();
   }
 
-  private async *keysSinceLastFetch(lastFetchDate?: Date): AsyncGenerator<string> {
+  private async *keysSinceLastFetch(lastFetchDate?: Date): AsyncGenerator<string | null> {
     const runningDate = new Date();
 
-    const lastCheckPeriod = periodSinceEpoch(lastFetchDate || addDays(runningDate, -14));
-    let runningPeriod = periodSinceEpoch(runningDate);
+    const lastCheckPeriod = periodSinceEpoch(lastFetchDate || addDays(runningDate, -14), hoursPerPeriod);
+    let runningPeriod = periodSinceEpoch(runningDate, hoursPerPeriod) - hoursPerPeriod;
 
     while (runningPeriod > lastCheckPeriod) {
-      yield await this.backendInterface.retrieveDiagnosisKeys(runningPeriod);
-      runningPeriod -= 2;
+      const zipFile = await this.backendInterface.retrieveDiagnosisKeys(runningPeriod);
+      if (zipFile) {
+        const components = zipFile.split('/');
+        components.pop();
+        components.push('keys-export');
+        const targetDir = components.join('/');
+
+        try {
+          const unzipResult = await unzip(zipFile, targetDir);
+          yield unzipResult;
+        } catch (err) {
+          yield null;
+        }
+      } else {
+        yield null;
+      }
+
+      // yield await this.backendInterface.retrieveDiagnosisKeys(runningPeriod);
+      runningPeriod -= hoursPerPeriod;
     }
   }
 
@@ -234,11 +253,19 @@ export class ExposureNotificationService {
     while (true) {
       const {value: keysFilesUrl, done} = await generator.next();
       if (done) break;
+      if (!keysFilesUrl) continue;
+      try {
+        const summary = await this.exposureNotification.detectExposure(exposureConfigutration, [
+          `${keysFilesUrl}/export.bin`,
+          `${keysFilesUrl}/export.sig`,
+        ]);
 
-      const summary = await this.exposureNotification.detectExposure(exposureConfigutration, [keysFilesUrl]);
-      if (summary.matchedKeyCount > 0) {
-        const exposures = await this.exposureNotification.getExposureInformation(summary);
-        return finalize({type: 'exposed', exposures});
+        if (summary.matchedKeyCount > 0) {
+          const exposures = await this.exposureNotification.getExposureInformation(summary);
+          return finalize({type: 'exposed', exposures});
+        }
+      } catch (err) {
+        continue;
       }
     }
     return finalize({type: 'monitoring'});

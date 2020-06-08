@@ -10,6 +10,8 @@ import {blobFetch} from 'shared/fetch';
 import {covidshield} from './covidshield';
 import {BackendInterface, SubmissionKeySet} from './types';
 
+const region = 302;
+
 export class BackendService implements BackendInterface {
   retrieveUrl: string;
   submitUrl: string;
@@ -22,10 +24,20 @@ export class BackendService implements BackendInterface {
   }
 
   async retrieveDiagnosisKeys(period: number) {
-    const message = `${period}:${Math.floor(new Date().getTime() / 1000 / 3600)}`;
+    const message = `${region}:${period}:${Math.floor(new Date().getTime() / 1000 / 3600)}`;
     const hmac = hmac256(message, encHex.parse(this.hmacKey)).toString(encHex);
 
-    return downloadDiagnosisKeysFile(`${this.retrieveUrl}/retrieve/${period}/${hmac}`);
+    try {
+      const url = `${this.retrieveUrl}/retrieve/${region}/${period}/${hmac}`;
+      console.log({url});
+      const res = await downloadDiagnosisKeysFile(url);
+      console.log({res});
+      return res;
+    } catch (err) {
+      console.log({err});
+      throw err;
+    }
+    // return downloadDiagnosisKeysFile(`${this.retrieveUrl}/retrieve/${period}/${hmac}`);
   }
 
   async getExposureConfiguration() {

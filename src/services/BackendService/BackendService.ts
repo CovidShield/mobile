@@ -10,34 +10,23 @@ import {blobFetch} from 'shared/fetch';
 import {covidshield} from './covidshield';
 import {BackendInterface, SubmissionKeySet} from './types';
 
-const region = 302;
-
 export class BackendService implements BackendInterface {
   retrieveUrl: string;
   submitUrl: string;
   hmacKey: string;
+  region: number;
 
-  constructor(retrieveUrl: string, submitUrl: string, hmacKey: string) {
+  constructor(retrieveUrl: string, submitUrl: string, hmacKey: string, region: number) {
     this.retrieveUrl = retrieveUrl;
     this.submitUrl = submitUrl;
     this.hmacKey = hmacKey;
+    this.region = region;
   }
 
   async retrieveDiagnosisKeys(period: number) {
-    const message = `${region}:${period}:${Math.floor(new Date().getTime() / 1000 / 3600)}`;
+    const message = `${this.region}:${period}:${Math.floor(new Date().getTime() / 1000 / 3600)}`;
     const hmac = hmac256(message, encHex.parse(this.hmacKey)).toString(encHex);
-
-    try {
-      const url = `${this.retrieveUrl}/retrieve/${region}/${period}/${hmac}`;
-      console.log({url});
-      const res = await downloadDiagnosisKeysFile(url);
-      console.log({res});
-      return res;
-    } catch (err) {
-      console.log({err});
-      throw err;
-    }
-    // return downloadDiagnosisKeysFile(`${this.retrieveUrl}/retrieve/${period}/${hmac}`);
+    return downloadDiagnosisKeysFile(`${this.retrieveUrl}/retrieve/${this.region}/${period}/${hmac}`);
   }
 
   async getExposureConfiguration() {
@@ -80,7 +69,6 @@ export class BackendService implements BackendInterface {
         }),
       ),
     });
-    console.log({upload: JSON.stringify(upload)});
 
     const serializedUpload = covidshield.Upload.encode(upload).finish();
 

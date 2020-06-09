@@ -185,8 +185,7 @@ export class ExposureNotificationService {
         const targetDir = components.join('/');
 
         try {
-          const unzipResult = await unzip(zipFile, targetDir);
-          yield unzipResult;
+          yield await unzip(zipFile, targetDir);
         } catch (err) {
           yield null;
         }

@@ -20,7 +20,7 @@ export const DiagnosedView = () => {
   const daysDiff = daysBetween(new Date(), exposureStatus.cycleEndsAt);
 
   return (
-    <BaseHomeView animationSource={require('assets/animation/yellow-dot.json')}>
+    <BaseHomeView>
       <Text textAlign="center" variant="bodyTitle" color="bodyText" marginBottom="l" accessibilityRole="header">
         {i18n.translate('Home.SignalDataShared')}
         {/* No exposure detected */}

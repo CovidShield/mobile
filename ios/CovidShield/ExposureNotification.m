@@ -214,41 +214,6 @@ RCT_REMAP_METHOD(detectExposure, detectExposureWithConfiguration:(NSDictionary *
   }];
 }
 
-RCT_REMAP_METHOD(detectExposure, detectExposureWithConfiguration:(NSDictionary *)configDict diagnosisKeysURLs:(NSArray*)urls withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
-{
-//  ENExposureConfiguration *configuration = [self configurationFromDictionary:configDict];
-  ENExposureConfiguration *configuration = [ENExposureConfiguration new];
-
-  configuration.minimumRiskScore = 0;
-  configuration.attenuationLevelValues = @[@1, @2, @3, @4, @5, @6, @7, @8];
-  configuration.daysSinceLastExposureLevelValues = @[@1, @2, @3, @4, @5, @6, @7, @8];
-  configuration.durationLevelValues = @[@1, @2, @3, @4, @5, @6, @7, @8];
-  configuration.transmissionRiskLevelValues = @[@1, @2, @3, @4, @5, @6, @7, @8];
-
-  NSMutableArray *arr = [NSMutableArray new];
-  for (NSString *urlStr in urls) {
-    [arr addObject: [NSURL fileURLWithPath:urlStr]];
-  }
-
-  [self.enManager detectExposuresWithConfiguration:configuration
-                                  diagnosisKeyURLs:arr
-                                 completionHandler:^(ENExposureDetectionSummary * _Nullable summary, NSError * _Nullable error) {
-    if (error) {
-      reject([NSString stringWithFormat:@"%ld", (long)error.code], error.localizedDescription ,error);
-      return;
-    }
-    NSNumber *idx = @(self.reportedSummaries.count);
-    [self.reportedSummaries addObject:summary];
-    resolve(@{
-      @"daysSinceLastExposure": @(summary.daysSinceLastExposure),
-      @"matchedKeyCount": @(summary.matchedKeyCount),
-      @"maximumRiskScore": @(summary.maximumRiskScore),
-      @"_summaryIdx": idx
-    });
-
-  }];
-}
-
 RCT_REMAP_METHOD(getExposureInformation,getExposureInformationForSummary:(NSDictionary *)summaryDict withUserExplanation: (NSString *)userExplanation withResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
   if (summaryDict[@"_summaryIdx"] == nil) {

@@ -57,10 +57,6 @@ export const TutorialContent = ({item, isActiveSlide}: {item: TutorialKey; isAct
             keypath: 'background',
             color: mainBackground,
           },
-          {
-            keypath: 'mask',
-            color: overlayBackground,
-          },
         ]}
       />
       <Box paddingHorizontal="xxl">

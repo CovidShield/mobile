@@ -2,11 +2,12 @@ import React, {useCallback, useMemo} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {ShareablePlatform, shareContent, shareInstagramStory, shareMessages, useShareablePlatforms} from 'bridge/Share';
 import {Box, Icon, Text, Toolbar} from 'components';
-import {Image, StyleSheet, TouchableOpacity, View, Platform, ScrollView} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View, Platform, ScrollView, Appearance} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Theme} from 'shared/theme';
 import {useI18n} from '@shopify/react-i18n';
-import OnboardingBg from 'assets/onboarding-bg.svg';
+import OnboardingBgLight from 'assets/onboarding-bg.svg';
+import OnboardingBgDark from 'assets/onboarding-bg-dark.svg';
 import {useTheme} from '@shopify/restyle';
 
 const ICONS = {
@@ -25,6 +26,8 @@ export const SharingScreen = () => {
   const navigation = useNavigation();
   const theme = useTheme<Theme>();
   const close = useCallback(() => navigation.goBack(), [navigation]);
+
+  const OnboardingBg = Appearance.getColorScheme() === 'dark' ? OnboardingBgDark : OnboardingBgLight;
 
   const platforms = useShareablePlatforms();
   const onShareByPlatform = useMemo(() => {

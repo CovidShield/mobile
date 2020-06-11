@@ -4,6 +4,8 @@ import {Box, Text} from 'components';
 import {useI18n} from '@shopify/react-i18n';
 import LottieView from 'lottie-react-native';
 import {useReduceMotionPreference} from 'shared/useReduceMotionPreference';
+import {useTheme} from '@shopify/restyle';
+import {Theme} from 'shared/theme';
 
 export type TutorialKey = 'step-1' | 'step-2' | 'step-3';
 
@@ -39,6 +41,9 @@ export const TutorialContent = ({item, isActiveSlide}: {item: TutorialKey; isAct
       animationRef.current?.reset();
     }
   }, [isActiveSlide, prefersReducedMotion, item]);
+  const theme = useTheme<Theme>();
+  const {mainBackground, overlayBackground} = theme.colors;
+
   return (
     <ScrollView style={styles.flex} contentContainerStyle={styles.center}>
       <LottieView
@@ -47,6 +52,16 @@ export const TutorialContent = ({item, isActiveSlide}: {item: TutorialKey; isAct
         source={animationData[item].source}
         imageAssetsFolder="animation/images"
         loop={!prefersReducedMotion}
+        colorFilters={[
+          {
+            keypath: 'background',
+            color: mainBackground,
+          },
+          {
+            keypath: 'mask',
+            color: overlayBackground,
+          },
+        ]}
       />
       <Box paddingHorizontal="xxl">
         <Text

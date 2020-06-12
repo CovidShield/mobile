@@ -5,6 +5,8 @@ import LottieView from 'lottie-react-native';
 import {useReduceMotionPreference} from 'shared/useReduceMotionPreference';
 import {Box, Header} from 'components';
 import {useOrientation} from 'shared/useOrientation';
+import {useTheme} from "@shopify/restyle";
+import {Theme} from "../../../shared/theme";
 
 interface BaseHomeViewProps {
   children?: React.ReactNode;
@@ -19,6 +21,8 @@ export const BaseHomeView = ({children, animationSource, animationPauseFrame}: B
   } = useOrientation();
   const prefersReducedMotion = useReduceMotionPreference();
   const animationRef: React.Ref<LottieView> = useRef(null);
+  const theme = useTheme<Theme>();
+  const {mainBackground} = theme.colors;
 
   useEffect(() => {
     // need to stop if user prefers reduced animations
@@ -52,6 +56,12 @@ export const BaseHomeView = ({children, animationSource, animationPauseFrame}: B
                 width: viewportWidth * 2,
                 height: viewportHeight / 2,
               }}
+              colorFilters={[
+                {
+                  keypath: 'background',
+                  color: mainBackground,
+                },
+              ]}
               source={animationSource}
               // don't play if user prefers reduced animations
               autoPlay={!prefersReducedMotion}

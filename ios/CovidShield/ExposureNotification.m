@@ -32,7 +32,7 @@
 typedef ENManagerMock ENManagerImplementation ;
 
 @interface ExposureNotification ()
-@property (nonatomic, assign) NSMutableArray *reportedSummaries;
+@property (nonatomic) NSMutableArray *reportedSummaries;
 @end
 
 @implementation ExposureNotification

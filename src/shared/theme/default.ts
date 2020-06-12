@@ -48,8 +48,6 @@ const lightTheme = {
     infoBlockBlackText: palette.white,
     infoBlockYellowBackground: palette.fadedYellow,
     divider: palette.fadedWhite,
-    blue: palette.linkBlue,
-    startButtonColor: palette.white,
   },
   spacing: {
     /* eslint-disable id-length */
@@ -119,7 +117,7 @@ const lightTheme = {
   },
   buttonVariants: {
     bigFlat: {
-      color: 'blue',
+      color: palette.linkBlue,
       height: 52,
       textColor: palette.white,
       fontFamily: 'Nunito',
@@ -131,9 +129,9 @@ const lightTheme = {
       },
     },
     start: {
-      color: 'startButtonColor',
+      color: palette.white,
       height: 52,
-      textColor: 'blue',
+      textColor: palette.linkBlue,
       fontFamily: 'Nunito',
       fontSize: 18,
       borderWidth: undefined,
@@ -160,7 +158,7 @@ const lightTheme = {
     text: {
       color: 'transparent',
       height: 44,
-      textColor: 'blue',
+      textColor: palette.linkBlue,
       fontFamily: 'Nunito',
       fontSize: 18,
       borderWidth: undefined,
@@ -189,8 +187,21 @@ const darkTheme = {
     infoBlockNeutralBackground: palette.darkGrey,
     overlayBodyText: palette.white,
     bodyTextSubdued: palette.fadedTextWhite,
-    blue: palette.darkBlue,
-    startButtonColor: palette.bodySubdued,
+  },
+  buttonVariants: {
+    bigFlat: {
+      ...lightTheme.buttonVariants.bigFlat,
+      color: palette.darkBlue,
+    },
+    start: {
+      ...lightTheme.buttonVariants.start,
+      color: palette.bodySubdued,
+      textColor: palette.darkBlue,
+    },
+    text: {
+      ...lightTheme.buttonVariants.text,
+      textColor: palette.darkBlue,
+    },
   },
 };
 

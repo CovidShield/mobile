@@ -29,55 +29,31 @@ const themes: Record<Region, {light: Theme; dark: Theme}> = {
     light: defaultTheme,
     dark: defaultTheme,
   },
-  AB: {
+  GSU: {
     light: defaultTheme,
     dark: defaultTheme,
   },
-  BC: {
+  GST: {
     light: defaultTheme,
     dark: defaultTheme,
   },
-  MB: {
+  GT: {
     light: defaultTheme,
     dark: defaultTheme,
   },
-  NB: {
+  KSU: {
     light: defaultTheme,
     dark: defaultTheme,
   },
-  NL: {
+  UGA: {
     light: defaultTheme,
     dark: defaultTheme,
   },
-  NS: {
+  UWG: {
     light: defaultTheme,
     dark: defaultTheme,
   },
-  ON: {
-    light: defaultTheme,
-    dark: defaultTheme,
-  },
-  PE: {
-    light: defaultTheme,
-    dark: defaultTheme,
-  },
-  QC: {
-    light: defaultTheme,
-    dark: defaultTheme,
-  },
-  SK: {
-    light: defaultTheme,
-    dark: defaultTheme,
-  },
-  NT: {
-    light: defaultTheme,
-    dark: defaultTheme,
-  },
-  NU: {
-    light: defaultTheme,
-    dark: defaultTheme,
-  },
-  YT: {
+  VSU: {
     light: defaultTheme,
     dark: defaultTheme,
   },

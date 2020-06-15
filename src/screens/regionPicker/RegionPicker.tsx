@@ -5,19 +5,13 @@ import {StyleSheet, TouchableOpacity, ScrollView, Image} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useStorage} from 'services/StorageService';
 import {useI18n} from '@shopify/react-i18n';
-import AbFlag from 'assets/flags/ab-flag.png';
-import BcFlag from 'assets/flags/bc-flag.png';
-import MbFlag from 'assets/flags/mb-flag.png';
-import NbFlag from 'assets/flags/nb-flag.png';
-import NlFlag from 'assets/flags/nl-flag.png';
-import NtFlag from 'assets/flags/nt-flag.png';
-import NsFlag from 'assets/flags/ns-flag.png';
-import NuFlag from 'assets/flags/nu-flag.png';
-import OnFlag from 'assets/flags/on-flag.png';
-import PeFlag from 'assets/flags/pe-flag.png';
-import QcFlag from 'assets/flags/qc-flag.png';
-import SkFlag from 'assets/flags/sk-flag.png';
-import YtFlag from 'assets/flags/yt-flag.png';
+import GsuFlag from 'assets/flags/gsu-flag.png';
+import GstFlag from 'assets/flags/gst-flag.png';
+import GtFlag from 'assets/flags/gt-flag.png';
+import KsuFlag from 'assets/flags/ksu-flag.png';
+import UgaFlag from 'assets/flags/uga-flag.png';
+import UwgFlag from 'assets/flags/uwg-flag.png';
+import VsuFlag from 'assets/flags/vsu-flag.png';
 import {Region} from 'shared/Region';
 
 interface RegionItemProps {
@@ -29,19 +23,13 @@ interface RegionItemProps {
 }
 
 const items: Omit<RegionItemProps, 'onPress' | 'selected' | 'name'>[] = [
-  {code: 'AB', flagIcon: AbFlag},
-  {code: 'BC', flagIcon: BcFlag},
-  {code: 'MB', flagIcon: MbFlag},
-  {code: 'NB', flagIcon: NbFlag},
-  {code: 'NL', flagIcon: NlFlag},
-  {code: 'NT', flagIcon: NtFlag},
-  {code: 'NS', flagIcon: NsFlag},
-  {code: 'NU', flagIcon: NuFlag},
-  {code: 'ON', flagIcon: OnFlag},
-  {code: 'PE', flagIcon: PeFlag},
-  {code: 'QC', flagIcon: QcFlag},
-  {code: 'SK', flagIcon: SkFlag},
-  {code: 'YT', flagIcon: YtFlag},
+  {code: 'GSU', flagIcon: GsuFlag},
+  {code: 'GST', flagIcon: GstFlag},
+  {code: 'GT', flagIcon: GtFlag},
+  {code: 'KSU', flagIcon: KsuFlag},
+  {code: 'UGA', flagIcon: UgaFlag},
+  {code: 'UWG', flagIcon: UwgFlag},
+  {code: 'VSU', flagIcon: VsuFlag},
 ];
 
 const RegionItem_ = ({code, onPress, name, flagIcon, selected}: RegionItemProps) => (

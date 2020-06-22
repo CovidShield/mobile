@@ -13,7 +13,7 @@ export const DataSharingScreen = () => {
   const navigation = useNavigation();
   const [i18n] = useI18n();
   const close = useCallback(() => navigation.goBack(), [navigation]);
-  const [exposureStatus] = useExposureStatus();
+  const exposureStatus = useExposureStatus();
   const [codeValue, setCodeValue] = useState('');
   const handleChange = useCallback(text => setCodeValue(text), []);
   // if keySubmissionStatus is None we need the 1-time code, otherwise we should go right to consent

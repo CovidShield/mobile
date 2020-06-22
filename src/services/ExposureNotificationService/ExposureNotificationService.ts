@@ -14,6 +14,8 @@ const SECURE_OPTIONS = {
   keychainService: 'covidShieldKeychain',
 };
 
+const LAST_CHECK_TIMESTAMP = 'lastCheckTimestamp';
+
 type Translate = (key: string) => string;
 const hoursPerPeriod = 24;
 
@@ -54,16 +56,18 @@ export interface SecureStorageOptions {
 export class ExposureNotificationService {
   systemStatus: Observable<SystemStatus>;
   exposureStatus: Observable<ExposureStatus>;
-  started = false;
 
-  exposureNotification: typeof ExposureNotification;
-  backendInterface: BackendInterface;
+  private exposureNotification: typeof ExposureNotification;
+  private backendInterface: BackendInterface;
 
-  translate: Translate;
-  storage: PersistencyProvider;
-  secureStorage: SecurePersistencyProvider;
+  private translate: Translate;
+  private storage: PersistencyProvider;
+  private secureStorage: SecurePersistencyProvider;
 
+  private starting = false;
   private exposureStatusUpdatePromise: Promise<ExposureStatus> | null = null;
+
+  private onReady: () => void;
 
   constructor(
     backendInterface: BackendInterface,
@@ -71,45 +75,41 @@ export class ExposureNotificationService {
     storage: PersistencyProvider,
     secureStorage: SecurePersistencyProvider,
     exposureNotification: typeof ExposureNotification,
+    onReady: () => void,
   ) {
-    this.translate = translate;
-    this.exposureNotification = exposureNotification;
     this.systemStatus = new Observable<SystemStatus>(SystemStatus.Disabled);
     this.exposureStatus = new Observable<ExposureStatus>({type: 'monitoring'});
+    this.translate = translate;
+    this.exposureNotification = exposureNotification;
     this.backendInterface = backendInterface;
     this.storage = storage;
     this.secureStorage = secureStorage;
+    this.onReady = onReady;
+    this.init();
   }
 
   async start(): Promise<void> {
-    this.started = true;
+    if (this.starting) {
+      return;
+    }
+    this.starting = true;
+
     try {
       await this.exposureNotification.start();
     } catch (_) {
-      // Noop because Exposure Notification framework is unavailable on device
+      // TODO: showing UI. Ex: Exposure Notification framework is unavailable on device.
       return;
     }
-    // we check the lastCheckTimeStamp on start to make sure it gets populated even if the server doesn't run
-    const timestamp = await this.storage.getItem('lastCheckTimeStamp');
-    const submissionCycleStartedAtStr = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
-    if (submissionCycleStartedAtStr) {
-      this.exposureStatus.set({
-        type: 'diagnosed',
-        cycleEndsAt: addDays(new Date(parseInt(submissionCycleStartedAtStr, 10)), 14),
-        // let updateExposureStatus() deal with that
-        needsSubmission: false,
-      });
-    }
-    if (timestamp) {
-      this.exposureStatus.set({...this.exposureStatus.get(), lastChecked: timestamp});
-    }
+
+    await this.updateSystemStatus();
     await this.updateExposureStatus();
+    this.starting = false;
   }
 
   async updateSystemStatus(): Promise<SystemStatus> {
     const status = await this.exposureNotification.getStatus();
     this.systemStatus.set(status);
-    return this.systemStatus.value;
+    return this.systemStatus.get();
   }
 
   async updateExposureStatusInBackground() {
@@ -169,6 +169,29 @@ export class ExposureNotificationService {
     await this.recordKeySubmission();
   }
 
+  private async init() {
+    // We attempt to load systemStatus and check the lastCheckTimestamp to make sure it gets populated even if the server doesn't run
+    try {
+      await this.updateSystemStatus();
+      const submissionCycleStartedAtStr = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
+      if (submissionCycleStartedAtStr) {
+        this.exposureStatus.set({
+          type: 'diagnosed',
+          cycleEndsAt: addDays(new Date(parseInt(submissionCycleStartedAtStr, 10)), 14),
+          // let updateExposureStatus() deal with that
+          needsSubmission: false,
+        });
+      }
+      const timestamp = await this.storage.getItem(LAST_CHECK_TIMESTAMP);
+      if (timestamp) {
+        this.exposureStatus.set({...this.exposureStatus.get(), lastChecked: timestamp});
+      }
+    } catch (error) {
+      console.log('>>> ExposureNotificationService.init', error);
+    }
+    this.onReady();
+  }
+
   private async *keysSinceLastFetch(lastFetchDate?: Date): AsyncGenerator<string | null> {
     const runningDate = new Date();
 
@@ -211,7 +234,7 @@ export class ExposureNotificationService {
   private async performExposureStatusUpdate(): Promise<ExposureStatus> {
     const exposureConfiguration = await this.backendInterface.getExposureConfiguration();
     const lastCheckDate = await (async () => {
-      const timestamp = await this.storage.getItem('lastCheckTimeStamp');
+      const timestamp = await this.storage.getItem(LAST_CHECK_TIMESTAMP);
       if (timestamp) {
         return new Date(parseInt(timestamp, 10));
       }
@@ -221,7 +244,7 @@ export class ExposureNotificationService {
     const finalize = (status: ExposureStatus) => {
       const timestamp = `${new Date().getTime()}`;
       this.exposureStatus.set({...status, lastChecked: timestamp});
-      this.storage.setItem('lastCheckTimeStamp', timestamp);
+      this.storage.setItem(LAST_CHECK_TIMESTAMP, timestamp);
       return this.exposureStatus.get();
     };
 
@@ -241,8 +264,8 @@ export class ExposureNotificationService {
           const exposures = await this.exposureNotification.getExposureInformation(summary);
           return finalize({type: 'exposed', exposures});
         }
-      } catch (err) {
-        console.log({err});
+      } catch (error) {
+        console.log('>>> ExposureNotificationService.performExposureStatusUpdate', error);
         continue;
       }
     }

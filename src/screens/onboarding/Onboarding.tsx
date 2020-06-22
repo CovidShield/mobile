@@ -5,7 +5,7 @@ import {Box, Button, Header, LanguageToggle, ProgressCircles} from 'components';
 import {LayoutChangeEvent, LayoutRectangle, StyleSheet} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Carousel, {CarouselStatic} from 'react-native-snap-carousel';
-import {useStartExposureNotificationService} from 'services/ExposureNotificationService';
+import {useExposureNotificationService} from 'services/ExposureNotificationService';
 import {useStorage} from 'services/StorageService';
 import {useMaxContentWidth} from 'shared/useMaxContentWidth';
 
@@ -26,16 +26,16 @@ export const OnboardingScreen = () => {
   const carouselRef = useRef(null);
   const {setOnboarded} = useStorage();
   const navigation = useNavigation();
-  const startExposureNotificationService = useStartExposureNotificationService();
+  const exposureNotificationService = useExposureNotificationService();
 
   const handlePermissions = useCallback(async () => {
-    await startExposureNotificationService();
+    await exposureNotificationService.start();
     setOnboarded(true);
     navigation.reset({
       index: 0,
       routes: [{name: 'Home'}],
     });
-  }, [navigation, setOnboarded, startExposureNotificationService]);
+  }, [navigation, setOnboarded, exposureNotificationService]);
 
   const maxWidth = useMaxContentWidth();
 

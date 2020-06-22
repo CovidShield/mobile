@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ActivityIndicator, ScrollView, StyleSheet} from 'react-native';
 import {Box, Text, Button, Icon} from 'components';
 import {useI18n} from '@shopify/react-i18n';
-import {useReportDiagnosis} from 'services/ExposureNotificationService';
+import {useExposureNotificationService} from 'services/ExposureNotificationService';
 
 interface Props {
   onSuccess: () => void;
@@ -14,21 +14,21 @@ export const ConsentView = ({onSuccess, onError}: Props) => {
   const [i18n] = useI18n();
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-  const {fetchAndSubmitKeys} = useReportDiagnosis();
+  const exposureNotificationService = useExposureNotificationService();
 
   const toPrivacyPolicy = useCallback(() => navigation.navigate('Privacy'), [navigation]);
 
   const handleUpload = useCallback(async () => {
     setLoading(true);
     try {
-      await fetchAndSubmitKeys();
+      await exposureNotificationService.fetchAndSubmitKeys();
       setLoading(false);
       onSuccess();
     } catch {
       setLoading(false);
       onError();
     }
-  }, [fetchAndSubmitKeys, onError, onSuccess]);
+  }, [exposureNotificationService, onError, onSuccess]);
 
   if (loading) {
     return (

@@ -10,7 +10,7 @@ import {BaseHomeView} from '../components/BaseHomeView';
 
 export const DiagnosedView = () => {
   const [i18n] = useI18n();
-  const [exposureStatus] = useExposureStatus();
+  const exposureStatus = useExposureStatus();
   const onAction = useCallback(() => {
     Linking.openURL(i18n.translate('Home.SymptomTrackerUrl')).catch(err => console.error('An error occurred', err));
   }, [i18n]);

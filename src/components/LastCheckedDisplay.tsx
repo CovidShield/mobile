@@ -1,13 +1,15 @@
 import React from 'react';
-import {Text, Box} from 'components';
 import {useI18n} from '@shopify/react-i18n';
 import {useExposureStatus} from 'services/ExposureNotificationService';
 import {daysFromNow, hoursFromNow, minutesFromNow} from 'shared/date-fns';
 import {pluralizeKey} from 'shared/pluralization';
 
+import {Box} from './Box';
+import {Text} from './Text';
+
 export const LastCheckedDisplay = () => {
   const [i18n] = useI18n();
-  const [exposureStatus] = useExposureStatus();
+  const exposureStatus = useExposureStatus();
   if (!exposureStatus.lastChecked) return null;
 
   const lastCheckedDate = new Date(parseInt(exposureStatus.lastChecked, 10));

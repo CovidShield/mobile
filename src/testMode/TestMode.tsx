@@ -3,7 +3,12 @@ import {createDrawerNavigator, DrawerContentScrollView} from '@react-navigation/
 import {useI18n} from '@shopify/react-i18n';
 import PushNotification from 'bridge/PushNotification';
 import {Box, Text} from 'components';
-import {SystemStatus, useSystemStatus, useExposureStatus} from 'services/ExposureNotificationService';
+import {
+  SystemStatus,
+  useSystemStatus,
+  useExposureStatus,
+  useExposureNotificationService,
+} from 'services/ExposureNotificationService';
 import {useStorage} from 'services/StorageService';
 import {ExposureSummary} from 'bridge/ExposureNotification';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -31,14 +36,16 @@ const DrawerContent = () => {
     mock.setEnabled(!mock.enabled);
   }, [mock]);
 
-  const [systemStatus, updateSystemStatus] = useSystemStatus();
+  const exposureNotificationService = useExposureNotificationService();
+
+  const systemStatus = useSystemStatus();
   const onToggleSystemStatus = useCallback(() => {
     const newStatus = systemStatus === SystemStatus.Active ? SystemStatus.Disabled : SystemStatus.Active;
     mock.exposureNotification.setStatus(newStatus);
-    updateSystemStatus();
-  }, [mock, systemStatus, updateSystemStatus]);
+    exposureNotificationService.updateSystemStatus();
+  }, [mock, systemStatus, exposureNotificationService]);
 
-  const [exposureStatus, updateExposureStatus] = useExposureStatus();
+  const exposureStatus = useExposureStatus();
   const onToggleExposureStatus = useCallback(() => {
     let newExposureSummary: ExposureSummary;
     switch (exposureStatus.type) {
@@ -60,8 +67,8 @@ const DrawerContent = () => {
         break;
     }
     mock.exposureNotification.setExposureSummary(newExposureSummary);
-    updateExposureStatus();
-  }, [exposureStatus.type, mock.exposureNotification, updateExposureStatus]);
+    exposureNotificationService.updateExposureStatus();
+  }, [exposureStatus.type, mock.exposureNotification, exposureNotificationService]);
 
   const [claimOneTimeCodeResponse, setClaimOneTimeCodeResponse] = useState(mock.backend.claimOneTimeCodeResponse);
   const onToggleClaimOneTimeCodeResponse = useCallback(() => {
@@ -109,7 +116,7 @@ const DrawerContent = () => {
                 onPress={async () => {
                   console.log('forcing refresh...');
                   await AsyncStorage.removeItem('lastCheckTimeStamp');
-                  updateExposureStatus();
+                  exposureNotificationService.updateExposureStatus();
                 }}
               />
             </Section>

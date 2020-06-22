@@ -1,17 +1,20 @@
-import React, {createContext, useCallback, useContext, useEffect, useState, useMemo} from 'react';
-import {useI18n} from '@shopify/react-i18n';
-import ExposureNotification, {Status as SystemStatus} from 'bridge/ExposureNotification';
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import {useI18n} from '@shopify/react-i18n';
+import ExposureNotification from 'bridge/ExposureNotification';
+import {AppState, AppStateStatus} from 'react-native';
 import SecureStorage from 'react-native-sensitive-info';
+import SystemSetting from 'react-native-system-setting';
 
 import {BackendInterface} from '../BackendService';
 import {BackgroundScheduler} from '../BackgroundSchedulerService';
 
 import {
   ExposureNotificationService,
-  ExposureStatus,
   PersistencyProvider,
   SecurePersistencyProvider,
+  SystemStatus,
+  ExposureStatus,
 } from './ExposureNotificationService';
 
 const ExposureNotificationServiceContext = createContext<ExposureNotificationService | undefined>(undefined);
@@ -34,6 +37,7 @@ export const ExposureNotificationServiceProvider = ({
   children,
 }: ExposureNotificationServiceProviderProps) => {
   const [i18n] = useI18n();
+  const [ready, setReady] = useState(false);
   const exposureNotificationService = useMemo(
     () =>
       new ExposureNotificationService(
@@ -42,6 +46,7 @@ export const ExposureNotificationServiceProvider = ({
         storage || AsyncStorage,
         secureStorage || SecureStorage,
         exposureNotification || ExposureNotification,
+        () => setReady(true),
       ),
     [backendInterface, exposureNotification, i18n.translate, secureStorage, storage],
   );
@@ -54,61 +59,52 @@ export const ExposureNotificationServiceProvider = ({
 
   return (
     <ExposureNotificationServiceContext.Provider value={exposureNotificationService}>
-      {children}
+      {ready && children}
     </ExposureNotificationServiceContext.Provider>
   );
 };
 
-export function useStartExposureNotificationService(): () => Promise<void> {
-  const exposureNotificationService = useContext(ExposureNotificationServiceContext)!;
-  return useCallback(async () => {
-    await exposureNotificationService.start();
-  }, [exposureNotificationService]);
+export function useExposureNotificationService() {
+  return useContext(ExposureNotificationServiceContext)!;
 }
 
-export function useSystemStatus(): [SystemStatus, () => void] {
+export function useSystemStatus() {
   const exposureNotificationService = useContext(ExposureNotificationServiceContext)!;
-  const [state, setState] = useState<SystemStatus>(exposureNotificationService.systemStatus.value);
-  const update = useCallback(() => {
-    exposureNotificationService.updateSystemStatus();
-  }, [exposureNotificationService]);
-
+  const [state, setState] = useState<SystemStatus>(exposureNotificationService.systemStatus.get());
   useEffect(() => {
     return exposureNotificationService.systemStatus.observe(setState);
-  }, [exposureNotificationService.systemStatus]);
+  }, [exposureNotificationService.systemStatus, setState]);
 
-  useEffect(update, [update]);
-
-  return [state, update];
+  return state;
 }
 
-export function useExposureStatus(): [ExposureStatus, () => void] {
+export function useExposureStatus() {
   const exposureNotificationService = useContext(ExposureNotificationServiceContext)!;
-  const [state, setState] = useState<ExposureStatus>(exposureNotificationService.exposureStatus.value);
-  const update = useCallback(() => {
-    exposureNotificationService.updateExposureStatus();
-  }, [exposureNotificationService]);
-
+  const [state, setState] = useState<ExposureStatus>(exposureNotificationService.exposureStatus.get());
   useEffect(() => {
     return exposureNotificationService.exposureStatus.observe(setState);
   }, [exposureNotificationService.exposureStatus]);
-
-  return [state, update];
+  return state;
 }
 
-export function useReportDiagnosis() {
-  const exposureNotificationService = useContext(ExposureNotificationServiceContext)!;
-  const startSubmission = useCallback(
-    (oneTimeCode: string) => {
-      return exposureNotificationService.startKeysSubmission(oneTimeCode);
-    },
-    [exposureNotificationService],
-  );
-  const fetchAndSubmitKeys = useCallback(() => {
-    return exposureNotificationService.fetchAndSubmitKeys();
+export function useExposureNotificationListener() {
+  const exposureNotificationService = useExposureNotificationService();
+  return useCallback(() => {
+    const updateStatus = async (newState: AppStateStatus) => {
+      if (newState === 'active') {
+        await exposureNotificationService.updateSystemStatus();
+        await exposureNotificationService.updateExposureStatus();
+      }
+    };
+    AppState.addEventListener('change', updateStatus);
+
+    const bluetoothListenerPromise = SystemSetting.addBluetoothListener(() => {
+      exposureNotificationService.updateSystemStatus();
+    });
+
+    return () => {
+      AppState.removeEventListener('change', updateStatus);
+      bluetoothListenerPromise.then(listener => listener.remove()).catch(() => {});
+    };
   }, [exposureNotificationService]);
-  return {
-    startSubmission,
-    fetchAndSubmitKeys,
-  };
 }

@@ -1,17 +1,17 @@
 import {useI18n} from '@shopify/react-i18n';
 import {Box, Button, Icon, LastCheckedDisplay, Text} from 'components';
 import React, {useCallback} from 'react';
-import {useStartExposureNotificationService} from 'services/ExposureNotificationService';
+import {useExposureNotificationService} from 'services/ExposureNotificationService';
 
 import {BaseHomeView} from '../components/BaseHomeView';
 
 export const ExposureNotificationsDisabledView = () => {
   const [i18n] = useI18n();
-  const startExposureNotificationService = useStartExposureNotificationService();
+  const exposureNotificationService = useExposureNotificationService();
 
   const enableExposureNotifications = useCallback(() => {
-    startExposureNotificationService();
-  }, [startExposureNotificationService]);
+    exposureNotificationService.start();
+  }, [exposureNotificationService]);
 
   return (
     <BaseHomeView>

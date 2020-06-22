@@ -5,7 +5,8 @@ import {
   useExposureStatus,
   useSystemStatus,
   SystemStatus,
-  useStartExposureNotificationService,
+  useExposureNotificationListener,
+  useExposureNotificationService,
 } from 'services/ExposureNotificationService';
 import {checkNotifications, requestNotifications} from 'react-native-permissions';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -31,8 +32,7 @@ const useNotificationPermissionStatus = (): [string, () => void] => {
     .then(({status}) => {
       setStatus(status);
     })
-    .catch(error => {
-      console.log(error);
+    .catch(() => {
       setStatus('unavailable');
     });
 
@@ -50,30 +50,10 @@ const useNotificationPermissionStatus = (): [string, () => void] => {
 };
 
 const Content = () => {
-  const [exposureStatus, updateExposureStatus] = useExposureStatus();
-  const [systemStatus, updateSystemStatus] = useSystemStatus();
-  const startExposureNotificationService = useStartExposureNotificationService();
-
-  useEffect(() => {
-    startExposureNotificationService();
-  }, [startExposureNotificationService]);
+  const exposureStatus = useExposureStatus();
+  const systemStatus = useSystemStatus();
 
   const network = useNetInfo();
-
-  useEffect(() => {
-    const updateStatus = (newState: AppStateStatus) => {
-      if (newState === 'active') {
-        updateExposureStatus();
-        updateSystemStatus();
-      }
-    };
-
-    AppState.addEventListener('change', updateStatus);
-
-    return () => {
-      AppState.removeEventListener('change', updateStatus);
-    };
-  }, [updateExposureStatus, updateSystemStatus]);
 
   switch (exposureStatus.type) {
     case 'exposed':
@@ -106,7 +86,17 @@ export const HomeScreen = () => {
     }
   }, [navigation]);
 
-  const [systemStatus] = useSystemStatus();
+  const exposureNotificationService = useExposureNotificationService();
+  useEffect(() => {
+    exposureNotificationService.start();
+  }, [exposureNotificationService]);
+
+  const exposureNotificationListener = useExposureNotificationListener();
+  useEffect(() => {
+    return exposureNotificationListener();
+  }, [exposureNotificationListener]);
+
+  const systemStatus = useSystemStatus();
   const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();
   const showNotificationWarning = notificationStatus === 'denied';
   const collapsedContent = useMemo(

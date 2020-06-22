@@ -3,17 +3,17 @@ import {Linking} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Box, InfoBlock, BoxProps} from 'components';
 import {useI18n, I18n} from '@shopify/react-i18n';
-import {SystemStatus, useStartExposureNotificationService} from 'services/ExposureNotificationService';
+import {SystemStatus, useExposureNotificationService} from 'services/ExposureNotificationService';
 
 import {InfoShareView} from './InfoShareView';
 import {StatusHeaderView} from './StatusHeaderView';
 
 const SystemStatusOff = ({i18n}: {i18n: I18n}) => {
-  const startExposureNotificationService = useStartExposureNotificationService();
+  const exposureNotificationService = useExposureNotificationService();
 
   const enableExposureNotifications = useCallback(() => {
-    startExposureNotificationService();
-  }, [startExposureNotificationService]);
+    exposureNotificationService.start();
+  }, [exposureNotificationService]);
 
   return (
     <InfoBlock

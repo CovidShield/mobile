@@ -13,7 +13,7 @@ interface ContentProps {
 
 export const SheetContentsContainer = ({children, isExpanded, toggleExpanded}: ContentProps) => {
   const [i18n] = useI18n();
-  const [systemStatus] = useSystemStatus();
+  const systemStatus = useSystemStatus();
   const content = (
     <Box backgroundColor="overlayBackground" minHeight="100%">
       <Box marginTop="l">{children}</Box>

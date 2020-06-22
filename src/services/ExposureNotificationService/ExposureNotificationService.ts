@@ -67,7 +67,7 @@ export class ExposureNotificationService {
   private starting = false;
   private exposureStatusUpdatePromise: Promise<ExposureStatus> | null = null;
 
-  private onReady: () => void;
+  private onReady: (service: ExposureNotificationService) => void;
 
   constructor(
     backendInterface: BackendInterface,
@@ -75,7 +75,7 @@ export class ExposureNotificationService {
     storage: PersistencyProvider,
     secureStorage: SecurePersistencyProvider,
     exposureNotification: typeof ExposureNotification,
-    onReady: () => void,
+    onReady: (service: ExposureNotificationService) => void,
   ) {
     this.systemStatus = new Observable<SystemStatus>(SystemStatus.Disabled);
     this.exposureStatus = new Observable<ExposureStatus>({type: 'monitoring'});
@@ -189,7 +189,7 @@ export class ExposureNotificationService {
     } catch (error) {
       console.log('>>> ExposureNotificationService.init', error);
     }
-    this.onReady();
+    this.onReady(this);
   }
 
   private async *keysSinceLastFetch(lastFetchDate?: Date): AsyncGenerator<string | null> {

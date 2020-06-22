@@ -22,12 +22,16 @@ AppRegistry.registerComponent(appName, () => App);
 BackgroundScheduler.registerAndroidHeadlessPeriodicTask(async () => {
   const backendService = new BackendService(RETRIEVE_URL, SUBMIT_URL, HMAC_KEY, REGION);
   const i18n = await getBackgroundI18n();
-  const exposureNotificationService = new ExposureNotificationService(
-    backendService,
-    i18n.translate,
-    AsyncStorage,
-    SecureStorage,
-    ExposureNotification,
+  const exposureNotificationService = await new Promise<ExposureNotificationService>(
+    resolve =>
+      new ExposureNotificationService(
+        backendService,
+        i18n.translate,
+        AsyncStorage,
+        SecureStorage,
+        ExposureNotification,
+        resolve,
+      ),
   );
   await exposureNotificationService.updateExposureStatusInBackground();
 });

@@ -1,58 +1,58 @@
-import React, {useMemo, useState, useEffect} from 'react';
-import {AppState, AppStateStatus, DevSettings} from 'react-native';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {BottomSheet, Box} from 'components';
+import {DevSettings} from 'react-native';
+import {checkNotifications, requestNotifications} from 'react-native-permissions';
 import {
-  useExposureStatus,
-  useSystemStatus,
   SystemStatus,
   useExposureNotificationListener,
   useExposureNotificationService,
+  useExposureStatus,
+  useSystemStatus,
 } from 'services/ExposureNotificationService';
-import {checkNotifications, requestNotifications} from 'react-native-permissions';
-import {useNetInfo} from '@react-native-community/netinfo';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {createCancellablePromise} from 'shared/cancellablePromise';
 import {useMaxContentWidth} from 'shared/useMaxContentWidth';
 
-import {ExposureNotificationsDisabledView} from './views/ExposureNotificationsDisabledView';
 import {BluetoothDisabledView} from './views/BluetoothDisabledView';
-import {NetworkDisabledView} from './views/NetworkDisabledView';
-import {DiagnosedView} from './views/DiagnosedView';
+import {CollapsedOverlayView} from './views/CollapsedOverlayView';
 import {DiagnosedShareView} from './views/DiagnosedShareView';
+import {DiagnosedView} from './views/DiagnosedView';
+import {ExposureNotificationsDisabledView} from './views/ExposureNotificationsDisabledView';
 import {ExposureView} from './views/ExposureView';
+import {NetworkDisabledView} from './views/NetworkDisabledView';
 import {NoExposureView} from './views/NoExposureView';
 import {OverlayView} from './views/OverlayView';
-import {CollapsedOverlayView} from './views/CollapsedOverlayView';
 
 type NotificationPermission = 'denied' | 'granted' | 'unavailable' | 'blocked';
 
 const useNotificationPermissionStatus = (): [string, () => void] => {
   const [status, setStatus] = useState<NotificationPermission>('granted');
 
-  checkNotifications()
-    .then(({status}) => {
-      setStatus(status);
-    })
-    .catch(() => {
-      setStatus('unavailable');
-    });
+  useEffect(() => {
+    return createCancellablePromise<NotificationPermission>(
+      checkNotifications()
+        .then(({status}) => status)
+        .catch(() => 'unavailable'),
+      setStatus,
+    );
+  }, []);
 
-  const request = () => {
-    requestNotifications(['alert'])
-      .then(({status}) => {
-        setStatus(status);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
+  const request = useCallback(() => {
+    return createCancellablePromise(
+      requestNotifications(['alert']).then(({status}) => status),
+      setStatus,
+    );
+  }, []);
 
-  return [status === 'granted' ? status : 'denied', request];
+  return [status, request];
 };
 
 const Content = () => {
   const exposureStatus = useExposureStatus();
   const systemStatus = useSystemStatus();
 
+  // Note: this library has bad implementation causing memory leak
   const network = useNetInfo();
 
   switch (exposureStatus.type) {
@@ -78,7 +78,7 @@ const Content = () => {
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  React.useEffect(() => {
+  useEffect(() => {
     if (__DEV__) {
       DevSettings.addMenuItem('Show Test Menu', () => {
         navigation.dispatch(DrawerActions.openDrawer());
@@ -98,7 +98,7 @@ export const HomeScreen = () => {
 
   const systemStatus = useSystemStatus();
   const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();
-  const showNotificationWarning = notificationStatus === 'denied';
+  const showNotificationWarning = notificationStatus !== 'granted';
   const collapsedContent = useMemo(
     () => (
       <CollapsedOverlayView

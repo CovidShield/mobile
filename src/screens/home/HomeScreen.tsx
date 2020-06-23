@@ -6,7 +6,7 @@ import {DevSettings} from 'react-native';
 import {checkNotifications, requestNotifications} from 'react-native-permissions';
 import {
   SystemStatus,
-  useExposureNotificationListener,
+  useExposureNotificationSystemStatusAutomaticUpdater,
   useExposureStatus,
   useStartExposureNotificationService,
   useSystemStatus,
@@ -53,12 +53,6 @@ const useNotificationPermissionStatus = (): [string, () => void] => {
 const Content = () => {
   const [exposureStatus] = useExposureStatus();
   const [systemStatus] = useSystemStatus();
-  const startExposureNotificationService = useStartExposureNotificationService();
-
-  useEffect(() => {
-    startExposureNotificationService();
-  }, [startExposureNotificationService]);
-
   const network = useNetInfo();
 
   switch (exposureStatus.type) {
@@ -76,8 +70,9 @@ const Content = () => {
         case SystemStatus.BluetoothOff:
           return <BluetoothDisabledView />;
         case SystemStatus.Active:
-        case SystemStatus.Unknown:
           return <NoExposureView />;
+        default:
+          return null;
       }
   }
 };
@@ -92,10 +87,17 @@ export const HomeScreen = () => {
     }
   }, [navigation]);
 
-  const exposureNotificationListener = useExposureNotificationListener();
+  // This only initiate system status updater.
+  // The actual updates will be delivered in useSystemStatus().
+  const subscribeToStatusUpdates = useExposureNotificationSystemStatusAutomaticUpdater();
   useEffect(() => {
-    return exposureNotificationListener();
-  }, [exposureNotificationListener]);
+    return subscribeToStatusUpdates();
+  }, [subscribeToStatusUpdates]);
+
+  const startExposureNotificationService = useStartExposureNotificationService();
+  useEffect(() => {
+    startExposureNotificationService();
+  }, [startExposureNotificationService]);
 
   const [systemStatus] = useSystemStatus();
   const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();

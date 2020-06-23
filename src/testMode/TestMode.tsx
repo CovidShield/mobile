@@ -8,6 +8,7 @@ import {
   useSystemStatus,
   useExposureStatus,
   useExposureNotificationService,
+  LAST_CHECK_TIMESTAMP,
 } from 'services/ExposureNotificationService';
 import {useStorage} from 'services/StorageService';
 import {ExposureSummary} from 'bridge/ExposureNotification';
@@ -115,7 +116,7 @@ const DrawerContent = () => {
                 title="Clear exposure history and run check"
                 onPress={async () => {
                   console.log('forcing refresh...');
-                  await AsyncStorage.removeItem('lastCheckTimeStamp');
+                  await AsyncStorage.removeItem(LAST_CHECK_TIMESTAMP);
                   exposureNotificationService.updateExposureStatus();
                 }}
               />

@@ -5,19 +5,20 @@ import {addDays, daysBetween, periodSinceEpoch} from 'shared/date-fns';
 
 import {BackendInterface, SubmissionKeySet} from '../BackendService';
 
-const SUBMISSION_AUTH_KEYS = 'submissionAuthKeys';
-const SUBMISSION_CYCLE_STARTED_AT = 'submissionCycleStartedAt';
-const SUBMISSION_LAST_COMPLETED_AT = 'submissionLastCompletedAt';
+export const SUBMISSION_AUTH_KEYS = 'submissionAuthKeys';
+export const SUBMISSION_CYCLE_STARTED_AT = 'submissionCycleStartedAt';
+export const SUBMISSION_LAST_COMPLETED_AT = 'submissionLastCompletedAt';
 
-const SECURE_OPTIONS = {
+export const SECURE_OPTIONS = {
   sharedPreferencesName: 'covidShieldSharedPreferences',
   keychainService: 'covidShieldKeychain',
 };
 
-const LAST_CHECK_TIMESTAMP = 'lastCheckTimestamp';
+export const LAST_CHECK_TIMESTAMP = 'lastCheckTimestamp';
 
-type Translate = (key: string) => string;
 const hoursPerPeriod = 24;
+
+export type Translate = (key: string) => string;
 
 export {SystemStatus};
 
@@ -77,8 +78,8 @@ export class ExposureNotificationService {
     exposureNotification: typeof ExposureNotification,
     onReady: (service: ExposureNotificationService) => void,
   ) {
-    this.systemStatus = new Observable<SystemStatus>(SystemStatus.Disabled);
     this.exposureStatus = new Observable<ExposureStatus>({type: 'monitoring'});
+    this.systemStatus = new Observable<SystemStatus>(SystemStatus.Disabled);
     this.translate = translate;
     this.exposureNotification = exposureNotification;
     this.backendInterface = backendInterface;
@@ -170,9 +171,10 @@ export class ExposureNotificationService {
   }
 
   private async init() {
-    // We attempt to load systemStatus and check the lastCheckTimestamp to make sure it gets populated even if the server doesn't run
+    await this.updateSystemStatus();
+
+    // Attempt to check the lastCheckTimestamp to make sure it gets populated even if the server doesn't run
     try {
-      await this.updateSystemStatus();
       const submissionCycleStartedAtStr = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
       if (submissionCycleStartedAtStr) {
         this.exposureStatus.set({
@@ -189,6 +191,7 @@ export class ExposureNotificationService {
     } catch (error) {
       console.log('>>> ExposureNotificationService.init', error);
     }
+
     this.onReady(this);
   }
 

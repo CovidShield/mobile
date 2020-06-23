@@ -1,26 +1,27 @@
-import React, {useMemo, useState, useEffect} from 'react';
-import {AppState, AppStateStatus, DevSettings} from 'react-native';
-import {BottomSheet, Box} from 'components';
-import {
-  useExposureStatus,
-  useSystemStatus,
-  SystemStatus,
-  useStartExposureNotificationService,
-} from 'services/ExposureNotificationService';
-import {checkNotifications, requestNotifications} from 'react-native-permissions';
+import React, {useEffect, useMemo, useState} from 'react';
 import {useNetInfo} from '@react-native-community/netinfo';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
+import {BottomSheet, Box} from 'components';
+import {DevSettings} from 'react-native';
+import {checkNotifications, requestNotifications} from 'react-native-permissions';
+import {
+  SystemStatus,
+  useExposureNotificationListener,
+  useExposureStatus,
+  useStartExposureNotificationService,
+  useSystemStatus,
+} from 'services/ExposureNotificationService';
 import {useMaxContentWidth} from 'shared/useMaxContentWidth';
 
-import {ExposureNotificationsDisabledView} from './views/ExposureNotificationsDisabledView';
 import {BluetoothDisabledView} from './views/BluetoothDisabledView';
-import {NetworkDisabledView} from './views/NetworkDisabledView';
-import {DiagnosedView} from './views/DiagnosedView';
+import {CollapsedOverlayView} from './views/CollapsedOverlayView';
 import {DiagnosedShareView} from './views/DiagnosedShareView';
+import {DiagnosedView} from './views/DiagnosedView';
+import {ExposureNotificationsDisabledView} from './views/ExposureNotificationsDisabledView';
 import {ExposureView} from './views/ExposureView';
+import {NetworkDisabledView} from './views/NetworkDisabledView';
 import {NoExposureView} from './views/NoExposureView';
 import {OverlayView} from './views/OverlayView';
-import {CollapsedOverlayView} from './views/CollapsedOverlayView';
 
 type NotificationPermission = 'denied' | 'granted' | 'unavailable' | 'blocked';
 
@@ -50,8 +51,8 @@ const useNotificationPermissionStatus = (): [string, () => void] => {
 };
 
 const Content = () => {
-  const [exposureStatus, updateExposureStatus] = useExposureStatus();
-  const [systemStatus, updateSystemStatus] = useSystemStatus();
+  const [exposureStatus] = useExposureStatus();
+  const [systemStatus] = useSystemStatus();
   const startExposureNotificationService = useStartExposureNotificationService();
 
   useEffect(() => {
@@ -59,21 +60,6 @@ const Content = () => {
   }, [startExposureNotificationService]);
 
   const network = useNetInfo();
-
-  useEffect(() => {
-    const updateStatus = (newState: AppStateStatus) => {
-      if (newState === 'active') {
-        updateExposureStatus();
-        updateSystemStatus();
-      }
-    };
-
-    AppState.addEventListener('change', updateStatus);
-
-    return () => {
-      AppState.removeEventListener('change', updateStatus);
-    };
-  }, [updateExposureStatus, updateSystemStatus]);
 
   switch (exposureStatus.type) {
     case 'exposed':
@@ -98,13 +84,18 @@ const Content = () => {
 
 export const HomeScreen = () => {
   const navigation = useNavigation();
-  React.useEffect(() => {
+  useEffect(() => {
     if (__DEV__) {
       DevSettings.addMenuItem('Show Test Menu', () => {
         navigation.dispatch(DrawerActions.openDrawer());
       });
     }
   }, [navigation]);
+
+  const exposureNotificationListener = useExposureNotificationListener();
+  useEffect(() => {
+    return exposureNotificationListener();
+  }, [exposureNotificationListener]);
 
   const [systemStatus] = useSystemStatus();
   const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();

@@ -130,11 +130,6 @@ export class ExposureNotificationService {
     }
   }
 
-  async submissionCycleEndsAt(): Promise<Date> {
-    const cycleStart = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
-    return addDays(cycleStart ? new Date(parseInt(cycleStart, 10)) : new Date(), 14);
-  }
-
   async updateExposureStatus(): Promise<ExposureStatus> {
     if (this.exposureStatusUpdatePromise) return this.exposureStatusUpdatePromise;
     const cleanUpPromise = <T>(input: T): T => {
@@ -193,6 +188,11 @@ export class ExposureNotificationService {
     }
 
     this.onReady(this);
+  }
+
+  private async submissionCycleEndsAt(): Promise<Date> {
+    const cycleStart = await this.storage.getItem(SUBMISSION_CYCLE_STARTED_AT);
+    return addDays(cycleStart ? new Date(parseInt(cycleStart, 10)) : new Date(), 14);
   }
 
   private async *keysSinceLastFetch(lastFetchDate?: Date): AsyncGenerator<string | null> {

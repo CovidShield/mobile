@@ -106,38 +106,75 @@ describe('ExposureNotificationService', () => {
     });
   });
 
-  // it('backfills keys when last timestamp not available', async () => {
-  //   dateSpy
-  //     .mockImplementationOnce(() => new OriginalDate('2020-05-19T07:10:00+0000'))
-  //     .mockImplementation((args: any) => new OriginalDate(args));
+  describe('start', () => {
+    it('calls exposureNotification.start', async () => {
+      const service = await createService();
+      await service.start();
 
-  //   await service.updateExposureStatus();
-  //   expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(14);
-  // });
+      expect(exposureNotification.start).toHaveBeenCalled();
+    });
 
-  // it('backfills the right amount of keys for current day', async () => {
-  //   dateSpy.mockImplementation((args: any) => {
-  //     if (args === undefined) return new OriginalDate('2020-05-19T11:10:00+0000');
-  //     return new OriginalDate(args);
-  //   });
+    it('calls exposureNotification.start once if it is still running', async () => {
+      const service = await createService();
+      const startPromise = service.start();
+      service.start();
 
-  //   storage.getItem.mockResolvedValue(new OriginalDate('2020-05-19T06:10:00+0000').getTime());
-  //   await service.updateExposureStatus();
-  //   expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(0);
+      await startPromise;
 
-  //   server.retrieveDiagnosisKeys.mockClear();
+      expect(exposureNotification.start).toHaveBeenCalledTimes(1);
+    });
+  });
 
-  //   storage.getItem.mockResolvedValue(new OriginalDate('2020-05-18T05:10:00+0000').getTime());
+  describe('updateSystemStatus', () => {
+    it('updates systemStatus', async () => {
+      exposureNotification.getStatus.mockResolvedValue(SystemStatus.BluetoothOff);
 
-  //   await service.updateExposureStatus();
-  //   expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(1);
+      const service = await createService();
 
-  //   server.retrieveDiagnosisKeys.mockClear();
-  //   storage.getItem.mockResolvedValue(new OriginalDate('2020-05-17T23:10:00+0000').getTime());
+      expect(service.systemStatus.get()).toStrictEqual(SystemStatus.BluetoothOff);
+    });
+  });
 
-  //   await service.updateExposureStatus();
-  //   expect(server.retrieveDiagnosisKeys).toHaveBeenCalledTimes(2);
-  // });
+  describe('updateExposureStatus', () => {
+    it('backfills keys when last timestamp not available', async () => {
+      when(storage.getItem)
+        .calledWith(LAST_CHECK_TIMESTAMP)
+        .mockResolvedValue(undefined);
+      backendInterface.retrieveDiagnosisKeys.mockResolvedValue('foo');
+
+      const service = await createService();
+
+      await service.updateExposureStatus();
+      expect(backendInterface.retrieveDiagnosisKeys).toHaveBeenCalledTimes(14);
+    });
+
+    describe('backfills the right amount of keys for current day', () => {
+      async function run(dayToBackfill: number) {
+        const today = Date.now();
+        backendInterface.retrieveDiagnosisKeys.mockResolvedValue('foo');
+        when(storage.getItem)
+          .calledWith(LAST_CHECK_TIMESTAMP)
+          .mockResolvedValue((today - dayToBackfill * 24 * 3600 * 1000).toString());
+
+        await (await createService()).updateExposureStatus();
+      }
+
+      it('backfills 0 day', async () => {
+        await run(0);
+        expect(backendInterface.retrieveDiagnosisKeys).toHaveBeenCalledTimes(0);
+      });
+
+      it('backfills 1 day', async () => {
+        await run(1);
+        expect(backendInterface.retrieveDiagnosisKeys).toHaveBeenCalledTimes(1);
+      });
+
+      it('backfills 2 days', async () => {
+        await run(2);
+        expect(backendInterface.retrieveDiagnosisKeys).toHaveBeenCalledTimes(2);
+      });
+    });
+  });
 
   // it('serializes status update', async () => {
   //   const updatePromise = service.updateExposureStatus();

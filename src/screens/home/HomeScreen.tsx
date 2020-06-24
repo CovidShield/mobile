@@ -66,6 +66,7 @@ const Content = () => {
       switch (systemStatus) {
         case SystemStatus.Disabled:
         case SystemStatus.Restricted:
+        case SystemStatus.Unknown:
           return <ExposureNotificationsDisabledView />;
         case SystemStatus.BluetoothOff:
           return <BluetoothDisabledView />;
@@ -82,7 +83,7 @@ const CollapsedContent = () => {
   const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();
   const showNotificationWarning = notificationStatus === 'denied';
 
-  if (systemStatus === SystemStatus.Unknown) {
+  if (systemStatus === SystemStatus.Undefined) {
     return null;
   }
 
@@ -101,7 +102,7 @@ const BottomSheetContent = () => {
   const showNotificationWarning = notificationStatus !== 'granted';
   const maxWidth = useMaxContentWidth();
 
-  if (systemStatus === SystemStatus.Unknown) {
+  if (systemStatus === SystemStatus.Undefined) {
     return null;
   }
 

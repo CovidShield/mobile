@@ -12,8 +12,8 @@
     "run-android": "yarn generate-translations && react-native run-android --variant debug",
     "run-ios": "yarn generate-translations && react-native run-ios",
     "start": "yarn generate-translations && react-native start --reset-cache",
-    "test": "jest",
-    "tsc": "tsc"
+    "test": "yarn generate-translations && jest",
+    "tsc": "yarn generate-translations && tsc"
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.9.0",

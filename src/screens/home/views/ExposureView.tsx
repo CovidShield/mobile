@@ -11,7 +11,7 @@ export const ExposureView = () => {
     Linking.openURL(i18n.translate('Home.GuidanceUrl')).catch(err => console.error('An error occurred', err));
   }, [i18n]);
   return (
-    <BaseHomeView animationSource={require('assets/animation/blue-and-yellow.json')}>
+    <BaseHomeView>
       <Text textAlign="center" variant="bodyTitle" color="bodyText" marginBottom="l" accessibilityRole="header">
         {i18n.translate('Home.ExposureDetected')}
         {/* No exposure detected */}

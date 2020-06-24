@@ -11,7 +11,7 @@
     "pod-install": "pushd ios; bundle exec pod install; popd",
     "run-android": "yarn generate-translations && react-native run-android --variant debug",
     "run-ios": "yarn generate-translations && react-native run-ios",
-    "start": "react-native start --reset-cache",
+    "start": "yarn generate-translations && react-native start --reset-cache",
     "test": "jest",
     "tsc": "tsc"
   },

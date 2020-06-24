@@ -34,7 +34,13 @@ export const SharingScreen = () => {
         [platform]: () => {
           switch (platform) {
             case 'instagram': {
-              shareInstagramStory(theme.colors.mainBackground);
+              shareInstagramStory(
+                theme.colors.mainBackground,
+                Platform.select({
+                  android: i18n.translate('Sharing.Message'),
+                  ios: i18n.translate('Sharing.InstagramImageUrl'),
+                })!,
+              );
               break;
             }
             case 'messages': {
@@ -80,7 +86,7 @@ export const SharingScreen = () => {
               >
                 {platforms.map(platform => (
                   <React.Fragment key={platform}>
-                    <TouchableOpacity onPress={onShareByPlatform[platform]}>
+                    <TouchableOpacity onPress={onShareByPlatform[platform]} accessibilityRole="button">
                       <Box paddingVertical="s" flexDirection="row" alignItems="center" justifyContent="space-between">
                         <Image style={styles.icon} source={ICONS[platform]} />
                         <Text variant="bodyText" marginVertical="s" marginLeft="s" color="overlayBodyText">
@@ -94,7 +100,7 @@ export const SharingScreen = () => {
                     <Box height={1} marginHorizontal="-m" backgroundColor="overlayBackground" />
                   </React.Fragment>
                 ))}
-                <TouchableOpacity onPress={onShareMore}>
+                <TouchableOpacity onPress={onShareMore} accessibilityRole="button">
                   <Box paddingVertical="s" flexDirection="row" alignItems="center" justifyContent="space-between">
                     <View style={styles.moreIcon}>
                       <Icon size={16} name="icon-ellipsis" />

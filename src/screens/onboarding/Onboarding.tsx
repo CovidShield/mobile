@@ -1,12 +1,12 @@
 import React, {useCallback, useRef, useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {Box, Button, ProgressCircles, Header, LanguageToggle} from 'components';
-import {StyleSheet, useWindowDimensions} from 'react-native';
-import {SafeAreaView, useSafeArea} from 'react-native-safe-area-context';
-import Carousel, {CarouselStatic} from 'react-native-snap-carousel';
-import {useStorage} from 'services/StorageService';
 import {useI18n} from '@shopify/react-i18n';
-import OnboardingBg from 'assets/onboarding-bg.svg';
+import {Box, Button, Header, LanguageToggle, ProgressCircles} from 'components';
+import {LayoutChangeEvent, LayoutRectangle, StyleSheet} from 'react-native';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Carousel, {CarouselStatic} from 'react-native-snap-carousel';
+import {useStartExposureNotificationService} from 'services/ExposureNotificationService';
+import {useStorage} from 'services/StorageService';
 import {useMaxContentWidth} from 'shared/useMaxContentWidth';
 
 import {Permissions} from './views/Permissions';
@@ -22,20 +22,20 @@ const viewComponents = {
 
 export const OnboardingScreen = () => {
   const [i18n] = useI18n();
-  const {width: viewportWidth} = useWindowDimensions();
-  const insets = useSafeArea();
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
   const {setOnboarded} = useStorage();
   const navigation = useNavigation();
-  const handlePermissions = useCallback(() => {
-    // handle all our app permission stuff
+  const startExposureNotificationService = useStartExposureNotificationService();
+
+  const handlePermissions = useCallback(async () => {
+    await startExposureNotificationService();
     setOnboarded(true);
     navigation.reset({
       index: 0,
       routes: [{name: 'Home'}],
     });
-  }, [navigation, setOnboarded]);
+  }, [navigation, setOnboarded, startExposureNotificationService]);
 
   const maxWidth = useMaxContentWidth();
 
@@ -73,27 +73,34 @@ export const OnboardingScreen = () => {
   const BackButton = <Button text={i18n.translate('Onboarding.ActionBack')} variant="subduedText" onPress={prevItem} />;
   const LanguageButton = <LanguageToggle />;
 
+  const [layout, setLayout] = useState<LayoutRectangle | undefined>();
+  const onLayout = useCallback(({nativeEvent: {layout}}: LayoutChangeEvent) => {
+    setLayout(layout);
+  }, []);
+
   return (
     <Box flex={1} backgroundColor="overlayBackground">
-      <Box position="absolute" bottom={50 + insets.bottom} width="100%" opacity={0.4}>
-        <OnboardingBg width="100%" viewBox="0 0 375 325" />
-      </Box>
       <SafeAreaView style={styles.flex}>
         <Header isOverlay />
-        <Carousel
-          ref={carouselRef}
-          data={contentData}
-          renderItem={renderItem}
-          sliderWidth={viewportWidth}
-          itemWidth={viewportWidth}
-          onSnapToItem={newIndex => setCurrentIndex(newIndex)}
-        />
-        <Box alignItems="center" justifyContent="center" flexDirection="row">
-          <Box flex={1} paddingHorizontal="l" paddingBottom="l">
-            {isStart ? LanguageButton : BackButton}
+        <Box flex={1} justifyContent="center" onLayout={onLayout}>
+          {layout && (
+            <Carousel
+              ref={carouselRef}
+              data={contentData}
+              renderItem={renderItem}
+              sliderWidth={layout.width}
+              itemWidth={layout.width}
+              itemHeight={layout.height}
+              onSnapToItem={newIndex => setCurrentIndex(newIndex)}
+            />
+          )}
+        </Box>
+        <Box flexDirection="row" padding="l">
+          <Box flex={1}>{isStart ? LanguageButton : BackButton}</Box>
+          <Box flex={1} justifyContent="center">
+            <ProgressCircles alignSelf="center" numberOfSteps={contentData.length} activeStep={currentIndex + 1} />
           </Box>
-          <ProgressCircles numberOfSteps={contentData.length} activeStep={currentIndex + 1} marginBottom="l" />
-          <Box flex={1} paddingHorizontal="l" paddingBottom="l">
+          <Box flex={1}>
             <Button
               text={i18n.translate(`Onboarding.Action${isEnd ? 'End' : 'Next'}`)}
               variant="text"

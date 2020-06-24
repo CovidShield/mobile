@@ -1,8 +1,10 @@
-import React, {createContext, useCallback, useContext, useEffect, useState, useMemo} from 'react';
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import AsyncStorage from '@react-native-community/async-storage';
 import {useI18n} from '@shopify/react-i18n';
 import ExposureNotification, {Status as SystemStatus} from 'bridge/ExposureNotification';
-import AsyncStorage from '@react-native-community/async-storage';
+import {AppState, AppStateStatus} from 'react-native';
 import SecureStorage from 'react-native-sensitive-info';
+import SystemSetting from 'react-native-system-setting';
 
 import {BackendInterface} from '../BackendService';
 import {BackgroundScheduler} from '../BackgroundSchedulerService';
@@ -59,12 +61,10 @@ export const ExposureNotificationServiceProvider = ({
   );
 };
 
-export function useStartENSystem(): () => void {
+export function useStartExposureNotificationService(): () => Promise<void> {
   const exposureNotificationService = useContext(ExposureNotificationServiceContext)!;
-  return useCallback(() => {
-    if (!exposureNotificationService.started) {
-      exposureNotificationService.start();
-    }
+  return useCallback(async () => {
+    await exposureNotificationService.start();
   }, [exposureNotificationService]);
 }
 
@@ -113,4 +113,26 @@ export function useReportDiagnosis() {
     startSubmission,
     fetchAndSubmitKeys,
   };
+}
+
+export function useExposureNotificationSystemStatusAutomaticUpdater() {
+  const exposureNotificationService = useContext(ExposureNotificationServiceContext)!;
+  return useCallback(() => {
+    const updateStatus = async (newState: AppStateStatus) => {
+      if (newState === 'active') {
+        await exposureNotificationService.updateSystemStatus();
+        await exposureNotificationService.updateExposureStatus();
+      }
+    };
+    AppState.addEventListener('change', updateStatus);
+
+    const bluetoothListenerPromise = SystemSetting.addBluetoothListener(() => {
+      exposureNotificationService.updateSystemStatus();
+    });
+
+    return () => {
+      AppState.removeEventListener('change', updateStatus);
+      bluetoothListenerPromise.then(listener => listener.remove()).catch(() => {});
+    };
+  }, [exposureNotificationService]);
 }

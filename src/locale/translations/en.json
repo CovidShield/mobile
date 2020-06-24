@@ -101,6 +101,7 @@
     "Platform-instagram": "Share to Instagram",
     "More": "More apps",
     "Message": "Join me in helping to slow the spread of COVID-19. Download the COVID Shield app: https://covidshield.app",
+    "InstagramImageUrl": "https://user-images.githubusercontent.com/5274722/84658989-b9ba6b00-aee4-11ea-84d4-d840527467b4.png",
     "Close": "Close"
   },
   "Onboarding": {
@@ -133,6 +134,7 @@
     "Cancel": "Cancel",
     "FormIntro": "Please enter your 8 digit COVID Shield code.",
     "Action": "Submit code",
+    "InputLabel": "Covid Shield code",
     "InfoSmall": "Your random IDs will not be shared unless you give permission in the next step.",
     "ConsentTitle": "Share your random IDs",
     "ConsentBody": "You have been granted access by a health care professional to share the random IDs stored on your phone.",
@@ -157,7 +159,9 @@
     "Label": "Developed in partnership with"
   },
   "BottomSheet": {
-    "Collapse": "Close"
+    "Collapse": "Close",
+    "OnStatus": "Covid Shield is on, Tap for more information",
+    "OffStatus": "Covid Shield is off, Tap for more information"
   },
   "RegionPicker": {
     "Title": "Select your province or territory",

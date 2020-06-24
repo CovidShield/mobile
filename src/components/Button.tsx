@@ -69,22 +69,30 @@ export const Button = ({
         <ActivityIndicator color={textColor} size="large" />
       ) : (
         <>
-          <Text style={{color: textColor || buttonColor, fontWeight, fontFamily, fontSize}}>{text}</Text>
+          <Text style={{...styles.content, color: textColor || buttonColor, fontWeight, fontFamily, fontSize}}>
+            {text}
+          </Text>
           {externalLink && <Icon name={externalArrowIcon} />}
         </>
       )}
     </Box>
   );
 
+  const accessibilityProps = {
+    accessibilityRole: 'button' as 'button',
+    accessibilityState: {disabled},
+    ...externalLinkProps,
+  };
+
   if (Platform.OS === 'android') {
     return (
-      <Ripple rippleContainerBorderRadius={4} rippleDuration={500} onPress={onPressHandler} {...externalLinkProps}>
+      <Ripple rippleContainerBorderRadius={4} onPress={onPressHandler} {...accessibilityProps}>
         {content}
       </Ripple>
     );
   }
   return (
-    <TouchableOpacity onPress={onPressHandler} style={styles.stretch} disabled={disabled} {...externalLinkProps}>
+    <TouchableOpacity onPress={onPressHandler} style={styles.stretch} disabled={disabled} {...accessibilityProps}>
       {content}
     </TouchableOpacity>
   );
@@ -93,5 +101,8 @@ export const Button = ({
 const styles = StyleSheet.create({
   stretch: {
     alignSelf: 'stretch',
+  },
+  content: {
+    textAlign: 'center',
   },
 });

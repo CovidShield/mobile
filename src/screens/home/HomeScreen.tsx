@@ -12,6 +12,10 @@ import {
 } from 'services/ExposureNotificationService';
 import {useMaxContentWidth} from 'shared/useMaxContentWidth';
 
+import {
+  NotificationPermissionStatusProvider,
+  useNotificationPermissionStatus,
+} from './components/NotificationPermissionStatus';
 import {BluetoothDisabledView} from './views/BluetoothDisabledView';
 import {CollapsedOverlayView} from './views/CollapsedOverlayView';
 import {DiagnosedShareView} from './views/DiagnosedShareView';
@@ -21,11 +25,6 @@ import {ExposureView} from './views/ExposureView';
 import {NetworkDisabledView} from './views/NetworkDisabledView';
 import {NoExposureView} from './views/NoExposureView';
 import {OverlayView} from './views/OverlayView';
-import {
-  useNotificationPermissionStatus,
-  NotificationPermissionStatusProvider,
-} from './components/NotificationPermissionStatus';
-import {getTimeZone} from 'react-native-localize';
 
 const Content = () => {
   const [exposureStatus] = useExposureStatus();

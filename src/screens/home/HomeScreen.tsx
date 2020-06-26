@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {BottomSheet, Box} from 'components';
 import {DevSettings} from 'react-native';
-import {checkNotifications, requestNotifications} from 'react-native-permissions';
 import {
   SystemStatus,
   useExposureNotificationSystemStatusAutomaticUpdater,
@@ -13,6 +12,10 @@ import {
 } from 'services/ExposureNotificationService';
 import {useMaxContentWidth} from 'shared/useMaxContentWidth';
 
+import {
+  NotificationPermissionStatusProvider,
+  useNotificationPermissionStatus,
+} from './components/NotificationPermissionStatus';
 import {BluetoothDisabledView} from './views/BluetoothDisabledView';
 import {CollapsedOverlayView} from './views/CollapsedOverlayView';
 import {DiagnosedShareView} from './views/DiagnosedShareView';
@@ -22,33 +25,6 @@ import {ExposureView} from './views/ExposureView';
 import {NetworkDisabledView} from './views/NetworkDisabledView';
 import {NoExposureView} from './views/NoExposureView';
 import {OverlayView} from './views/OverlayView';
-
-type NotificationPermission = 'denied' | 'granted' | 'unavailable' | 'blocked';
-
-const useNotificationPermissionStatus = (): [string, () => void] => {
-  const [status, setStatus] = useState<NotificationPermission>('granted');
-
-  checkNotifications()
-    .then(({status}) => {
-      setStatus(status);
-    })
-    .catch(error => {
-      console.log(error);
-      setStatus('unavailable');
-    });
-
-  const request = () => {
-    requestNotifications(['alert'])
-      .then(({status}) => {
-        setStatus(status);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  return [status, request];
-};
 
 const Content = () => {
   const [exposureStatus] = useExposureStatus();
@@ -116,6 +92,14 @@ const BottomSheetContent = () => {
   );
 };
 
+const BottomSheetWrapper = () => {
+  const [notificationStatus] = useNotificationPermissionStatus();
+  const showNotificationWarning = notificationStatus !== 'granted';
+  return (
+    <BottomSheet content={BottomSheetContent} collapsed={CollapsedContent} extraContent={showNotificationWarning} />
+  );
+};
+
 export const HomeScreen = () => {
   const navigation = useNavigation();
   useEffect(() => {
@@ -138,22 +122,16 @@ export const HomeScreen = () => {
     startExposureNotificationService();
   }, [startExposureNotificationService]);
 
-  const [notificationStatus] = useNotificationPermissionStatus();
-  const showNotificationWarning = notificationStatus !== 'granted';
   const maxWidth = useMaxContentWidth();
 
   return (
-    <Box flex={1} alignItems="center" backgroundColor="mainBackground">
-      <Box flex={1} maxWidth={maxWidth} paddingTop="m">
-        <Content />
+    <NotificationPermissionStatusProvider>
+      <Box flex={1} alignItems="center" backgroundColor="mainBackground">
+        <Box flex={1} maxWidth={maxWidth} paddingTop="m">
+          <Content />
+        </Box>
+        <BottomSheetWrapper />
       </Box>
-      <BottomSheet
-        // need to change the key here so bottom sheet is rerendered. This is because the snap points change.
-        key={showNotificationWarning ? 'notifications-disabled' : 'notifications-enabled'}
-        content={BottomSheetContent}
-        collapsed={CollapsedContent}
-        extraContent={showNotificationWarning}
-      />
-    </Box>
+    </NotificationPermissionStatusProvider>
   );
 };

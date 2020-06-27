@@ -61,7 +61,6 @@ const OnboardingScreenWithNavBar = withDarkNav(OnboardingScreen);
 const TutorialScreenWithNavBar = withDarkNav(TutorialScreen);
 const DataSharingScreenWithNavBar = withDarkNav(DataSharingScreen);
 const PrivacyScreenWithNavBar = withDarkNav(PrivacyScreen);
-const SharingScreenWithNavBar = withDarkNav(SharingScreen);
 const LanguageScreenWithNavBar = withDarkNav(LanguageScreen);
 
 const DEFAULT_SCREEN_OPTIONS: NativeStackNavigationOptions = {
@@ -95,7 +94,6 @@ const MainNavigator = () => {
       <MainStack.Screen name="Tutorial" component={TutorialScreenWithNavBar} />
       <MainStack.Screen name="DataSharing" component={DataSharingScreenWithNavBar} />
       <MainStack.Screen name="Privacy" component={PrivacyScreenWithNavBar} />
-      <MainStack.Screen name="Sharing" component={SharingScreenWithNavBar} />
       <MainStack.Screen name="LanguageSelect" component={LanguageScreenWithNavBar} />
     </MainStack.Navigator>
   );

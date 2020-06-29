@@ -16,12 +16,14 @@ export interface BottomSheetProps {
   collapsedContent?: React.ReactElement;
   children?: React.ReactElement;
   extraContent?: boolean;
+  isExpanded: boolean;
+  setIsExpanded: (bool: boolean) => void;
 }
 
-const BottomSheet = ({children, collapsedContent, extraContent}: BottomSheetProps) => {
+const BottomSheet = ({children, collapsedContent, extraContent, isExpanded, setIsExpanded}: BottomSheetProps) => {
   const bottomSheetPosition = useRef(new Animated.Value(1));
   const bottomSheetRef: React.Ref<BottomSheetRaw> = useRef(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+  // const [isExpanded, setIsExpanded] = useState(false);
   const [i18n] = useI18n();
   const toggleExpanded = useCallback(() => {
     if (isExpanded) {
@@ -84,6 +86,7 @@ const BottomSheet = ({children, collapsedContent, extraContent}: BottomSheetProp
         renderContent={renderContent}
         onOpenEnd={onOpenEnd}
         onCloseEnd={onCloseEnd}
+        onCloseStart={onCloseEnd}
         renderHeader={renderHeader}
         snapPoints={snapPoints}
         initialSnap={1}

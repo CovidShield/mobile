@@ -92,6 +92,7 @@ const Content = () => {
 };
 
 export const HomeScreen = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
   React.useEffect(() => {
     if (__DEV__) {
@@ -120,13 +121,15 @@ export const HomeScreen = () => {
   return (
     <Box flex={1} alignItems="center" backgroundColor="mainBackground">
       <Box flex={1} maxWidth={maxWidth} paddingTop="m">
-        <Content />
+        {!isExpanded && <Content />}
       </Box>
       <BottomSheet
         // need to change the key here so bottom sheet is rerendered. This is because the snap points change.
         key={showNotificationWarning ? 'notifications-disabled' : 'notifications-enabled'}
         collapsedContent={collapsedContent}
         extraContent={showNotificationWarning}
+        isExpanded={isExpanded}
+        setIsExpanded={setIsExpanded}
       >
         <OverlayView
           status={systemStatus}

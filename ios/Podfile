@@ -77,19 +77,14 @@ target 'CovidShield' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
-  pod 'RNBackgroundFetch', :path => '../node_modules/react-native-background-fetch'
 
-  pod 'react-native-splash-screen', :path => '../node_modules/react-native-splash-screen'
 
   permissions_path = '../node_modules/react-native-permissions/ios'
 
   pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications.podspec"
 
-  pod 'react-native-config', :path => '../node_modules/react-native-config'
 
-  pod 'react-native-sensitive-info', :path => '../node_modules/react-native-sensitive-info'
 
   target 'CovidShieldTests' do
     inherit! :complete

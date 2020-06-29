@@ -37,16 +37,14 @@ export const InfoBlock = ({
       )}
       {(title || titleBolded) && (
         <Box marginBottom="m" justifyContent="center" flexDirection="row" flexWrap="wrap">
-          {title && (
-            <Text variant="overlayTitle" accessibilityRole="header" color={color}>
-              {title}
-            </Text>
-          )}
-          {titleBolded && (
-            <Text variant="overlayTitle" accessibilityRole="header" color={color} fontFamily="Nunito-Bold">
-              {titleBolded}
-            </Text>
-          )}
+          <Text variant="overlayTitle" accessibilityRole="header" textAlign="center">
+            {title && <Text color={color}>{title}</Text>}
+            {titleBolded && (
+              <Text color={color} fontFamily="Nunito-Bold">
+                {titleBolded}
+              </Text>
+            )}
+          </Text>
         </Box>
       )}
       <Text variant="bodyText" fontSize={16} color={color} marginBottom="m" textAlign="center">

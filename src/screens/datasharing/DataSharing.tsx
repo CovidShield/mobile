@@ -42,7 +42,7 @@ export const DataSharingScreen = () => {
           navLabel={i18n.translate('DataUpload.Cancel')}
           onIconClicked={close}
         />
-        <ScrollView>
+        <ScrollView style={styles.flex} keyboardShouldPersistTaps="handled">
           {!isVerified && (
             <FormView value={codeValue} onChange={handleChange} onSuccess={handleVerify} onError={onError} />
           )}

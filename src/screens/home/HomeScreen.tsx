@@ -1,74 +1,35 @@
-import React, {useMemo, useState, useEffect} from 'react';
-import {AppState, AppStateStatus, DevSettings} from 'react-native';
-import {BottomSheet, Box} from 'components';
-import {useExposureStatus, useSystemStatus, SystemStatus, useStartENSystem} from 'services/ExposureNotificationService';
-import {checkNotifications, requestNotifications} from 'react-native-permissions';
+import React, {useEffect} from 'react';
 import {useNetInfo} from '@react-native-community/netinfo';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
+import {BottomSheet, Box} from 'components';
+import {DevSettings} from 'react-native';
+import {
+  SystemStatus,
+  useExposureNotificationSystemStatusAutomaticUpdater,
+  useExposureStatus,
+  useStartExposureNotificationService,
+  useSystemStatus,
+} from 'services/ExposureNotificationService';
 import {useMaxContentWidth} from 'shared/useMaxContentWidth';
 
-import {ExposureNotificationsDisabledView} from './views/ExposureNotificationsDisabledView';
+import {
+  NotificationPermissionStatusProvider,
+  useNotificationPermissionStatus,
+} from './components/NotificationPermissionStatus';
 import {BluetoothDisabledView} from './views/BluetoothDisabledView';
-import {NetworkDisabledView} from './views/NetworkDisabledView';
-import {DiagnosedView} from './views/DiagnosedView';
+import {CollapsedOverlayView} from './views/CollapsedOverlayView';
 import {DiagnosedShareView} from './views/DiagnosedShareView';
+import {DiagnosedView} from './views/DiagnosedView';
+import {ExposureNotificationsDisabledView} from './views/ExposureNotificationsDisabledView';
 import {ExposureView} from './views/ExposureView';
+import {NetworkDisabledView} from './views/NetworkDisabledView';
 import {NoExposureView} from './views/NoExposureView';
 import {OverlayView} from './views/OverlayView';
-import {CollapsedOverlayView} from './views/CollapsedOverlayView';
-
-type NotificationPermission = 'denied' | 'granted' | 'unavailable' | 'blocked';
-
-const useNotificationPermissionStatus = (): [string, () => void] => {
-  const [status, setStatus] = useState<NotificationPermission>('granted');
-
-  checkNotifications()
-    .then(({status}) => {
-      setStatus(status);
-    })
-    .catch(error => {
-      console.log(error);
-      setStatus('unavailable');
-    });
-
-  const request = () => {
-    requestNotifications(['alert'])
-      .then(({status}) => {
-        setStatus(status);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  };
-
-  return [status === 'granted' ? status : 'denied', request];
-};
 
 const Content = () => {
-  const [exposureStatus, updateExposureStatus] = useExposureStatus();
-  const [systemStatus, updateSystemStatus] = useSystemStatus();
-  const startSystem = useStartENSystem();
-
-  useEffect(() => {
-    startSystem();
-  }, [startSystem]);
-
+  const [exposureStatus] = useExposureStatus();
+  const [systemStatus] = useSystemStatus();
   const network = useNetInfo();
-
-  useEffect(() => {
-    const updateStatus = (newState: AppStateStatus) => {
-      if (newState === 'active') {
-        updateExposureStatus();
-        updateSystemStatus();
-      }
-    };
-
-    AppState.addEventListener('change', updateStatus);
-
-    return () => {
-      AppState.removeEventListener('change', updateStatus);
-    };
-  }, [updateExposureStatus, updateSystemStatus]);
 
   switch (exposureStatus.type) {
     case 'exposed':
@@ -77,24 +38,72 @@ const Content = () => {
       return exposureStatus.needsSubmission ? <DiagnosedShareView /> : <DiagnosedView />;
     case 'monitoring':
     default:
-      if (!network.isConnected) return <NetworkDisabledView />;
+      if (!network.isConnected && network.type !== 'unknown') return <NetworkDisabledView />;
       switch (systemStatus) {
         case SystemStatus.Disabled:
         case SystemStatus.Restricted:
+        case SystemStatus.Unknown:
           return <ExposureNotificationsDisabledView />;
         case SystemStatus.BluetoothOff:
           return <BluetoothDisabledView />;
         case SystemStatus.Active:
-        case SystemStatus.Unknown:
           return <NoExposureView />;
+        default:
+          return null;
       }
   }
+};
+
+const CollapsedContent = () => {
+  const [systemStatus] = useSystemStatus();
+  const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();
+  const showNotificationWarning = notificationStatus !== 'granted';
+
+  if (systemStatus === SystemStatus.Undefined) {
+    return null;
+  }
+
+  return (
+    <CollapsedOverlayView
+      status={systemStatus}
+      notificationWarning={showNotificationWarning}
+      turnNotificationsOn={turnNotificationsOn}
+    />
+  );
+};
+
+const BottomSheetContent = () => {
+  const [systemStatus] = useSystemStatus();
+  const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();
+  const showNotificationWarning = notificationStatus !== 'granted';
+  const maxWidth = useMaxContentWidth();
+
+  if (systemStatus === SystemStatus.Undefined) {
+    return null;
+  }
+
+  return (
+    <OverlayView
+      status={systemStatus}
+      notificationWarning={showNotificationWarning}
+      turnNotificationsOn={turnNotificationsOn}
+      maxWidth={maxWidth}
+    />
+  );
+};
+
+const BottomSheetWrapper = () => {
+  const [notificationStatus] = useNotificationPermissionStatus();
+  const showNotificationWarning = notificationStatus !== 'granted';
+  return (
+    <BottomSheet content={BottomSheetContent} collapsed={CollapsedContent} extraContent={showNotificationWarning} />
+  );
 };
 
 export const HomeScreen = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
-  React.useEffect(() => {
+  useEffect(() => {
     if (__DEV__) {
       DevSettings.addMenuItem('Show Test Menu', () => {
         navigation.dispatch(DrawerActions.openDrawer());
@@ -102,42 +111,28 @@ export const HomeScreen = () => {
     }
   }, [navigation]);
 
-  const [systemStatus] = useSystemStatus();
-  const [notificationStatus, turnNotificationsOn] = useNotificationPermissionStatus();
-  const showNotificationWarning = notificationStatus === 'denied';
-  const collapsedContent = useMemo(
-    () => (
-      <CollapsedOverlayView
-        status={systemStatus}
-        notificationWarning={showNotificationWarning}
-        turnNotificationsOn={turnNotificationsOn}
-      />
-    ),
-    [showNotificationWarning, systemStatus, turnNotificationsOn],
-  );
+  // This only initiate system status updater.
+  // The actual updates will be delivered in useSystemStatus().
+  const subscribeToStatusUpdates = useExposureNotificationSystemStatusAutomaticUpdater();
+  useEffect(() => {
+    return subscribeToStatusUpdates();
+  }, [subscribeToStatusUpdates]);
+
+  const startExposureNotificationService = useStartExposureNotificationService();
+  useEffect(() => {
+    startExposureNotificationService();
+  }, [startExposureNotificationService]);
 
   const maxWidth = useMaxContentWidth();
 
   return (
-    <Box flex={1} alignItems="center" backgroundColor="mainBackground">
-      <Box flex={1} maxWidth={maxWidth} paddingTop="m">
-        {!isExpanded && <Content />}
+    <NotificationPermissionStatusProvider>
+      <Box flex={1} alignItems="center" backgroundColor="mainBackground">
+        <Box flex={1} maxWidth={maxWidth} paddingTop="m">
+          <Content />
+        </Box>
+        <BottomSheetWrapper />
       </Box>
-      <BottomSheet
-        // need to change the key here so bottom sheet is rerendered. This is because the snap points change.
-        key={showNotificationWarning ? 'notifications-disabled' : 'notifications-enabled'}
-        collapsedContent={collapsedContent}
-        extraContent={showNotificationWarning}
-        isExpanded={isExpanded}
-        setIsExpanded={setIsExpanded}
-      >
-        <OverlayView
-          status={systemStatus}
-          notificationWarning={showNotificationWarning}
-          turnNotificationsOn={turnNotificationsOn}
-          maxWidth={maxWidth}
-        />
-      </BottomSheet>
-    </Box>
+    </NotificationPermissionStatusProvider>
   );
 };

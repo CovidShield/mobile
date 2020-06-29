@@ -85,3 +85,6 @@ ios/GoogleService-Info.plist
 ios/Generated.xcconfig
 android/app/google-services.json
 .env.local
+
+# Translations
+src/locale/translations/index.js

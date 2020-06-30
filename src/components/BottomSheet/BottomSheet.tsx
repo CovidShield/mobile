@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useRef, useEffect, useMemo} from 'react';
+import React, {useCallback, useRef, useEffect, useMemo} from 'react';
 import {View, StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {useSafeArea} from 'react-native-safe-area-context';

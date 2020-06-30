@@ -10,7 +10,7 @@ export const LastCheckedDisplay = () => {
   const [exposureStatus] = useExposureStatus();
   if (!exposureStatus.lastChecked) return null;
 
-  const lastCheckedDate = new Date(parseInt(exposureStatus.lastChecked, 10));
+  const lastCheckedDate = new Date(exposureStatus.lastChecked);
   const daysDiff = daysFromNow(lastCheckedDate);
   const hoursDiff = hoursFromNow(lastCheckedDate);
   const minutesDiff = Math.max(minutesFromNow(lastCheckedDate), 1);

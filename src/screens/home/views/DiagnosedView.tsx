@@ -17,7 +17,7 @@ export const DiagnosedView = () => {
 
   if (exposureStatus.type !== 'diagnosed') return null;
 
-  const daysDiff = daysBetween(new Date(), exposureStatus.cycleEndsAt);
+  const daysDiff = daysBetween(new Date(), new Date(exposureStatus.cycleEndsAt));
 
   return (
     <BaseHomeView>

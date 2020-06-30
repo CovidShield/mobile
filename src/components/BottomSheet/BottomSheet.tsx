@@ -20,7 +20,13 @@ export interface BottomSheetProps {
   setIsExpanded: (bool: boolean) => void;
 }
 
-const BottomSheet = ({content: ContentComponent, collapsed: CollapsedComponent, extraContent}: BottomSheetProps) => {
+const BottomSheet = ({
+  content: ContentComponent,
+  collapsed: CollapsedComponent,
+  extraContent,
+  isExpanded,
+  setIsExpanded,
+}: BottomSheetProps) => {
   const bottomSheetPosition = useRef(new Animated.Value(1));
   const bottomSheetRef: React.Ref<BottomSheetRaw> = useRef(null);
   // const [isExpanded, setIsExpanded] = useState(false);

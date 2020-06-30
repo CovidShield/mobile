@@ -1,9 +1,8 @@
-import {Status as SystemStatus, ExposureSummary} from 'bridge/ExposureNotificationAPI';
-import ExposureNotification from 'bridge/ExposureNotification';
+import ExposureNotification, {ExposureSummary, Status as SystemStatus} from 'bridge/ExposureNotification';
 import PushNotification from 'bridge/PushNotification';
-import {Observable} from 'shared/Observable';
 import {addDays, daysBetween, periodSinceEpoch} from 'shared/date-fns';
 import {I18n} from '@shopify/react-i18n';
+import {Observable} from 'shared/Observable';
 
 import {BackendInterface, SubmissionKeySet} from '../BackendService';
 
@@ -237,10 +236,10 @@ export class ExposureNotificationService {
       return undefined;
     })();
 
-    const finalize = (status: ExposureStatus) => {
+    const finalize = async (status: ExposureStatus) => {
       const timestamp = `${new Date().getTime()}`;
       this.exposureStatus.set({...status, lastChecked: timestamp});
-      this.storage.setItem(LAST_CHECK_TIMESTAMP, timestamp);
+      await this.storage.setItem(LAST_CHECK_TIMESTAMP, timestamp);
       return this.exposureStatus.get();
     };
 
@@ -249,22 +248,24 @@ export class ExposureNotificationService {
       return finalize({...currentStatus, needsSubmission: await this.calculateNeedsSubmission()});
     }
 
+    const keysFileUrls: string[] = [];
     const generator = this.keysSinceLastFetch(lastCheckDate);
     while (true) {
-      const {value: keysFilesUrl, done} = await generator.next();
+      const {value: keysFileUrl, done} = await generator.next();
       if (done) break;
-      if (!keysFilesUrl) continue;
-      try {
-        const summary = await this.exposureNotification.detectExposure(exposureConfiguration, [keysFilesUrl]);
-
-        if (summary.matchedKeyCount > 0) {
-          return finalize({type: 'exposed', summary});
-        }
-      } catch (err) {
-        console.log({err});
-        continue;
-      }
+      if (!keysFileUrl) continue;
+      keysFileUrls.push(keysFileUrl);
     }
+
+    try {
+      const summary = await this.exposureNotification.detectExposure(exposureConfiguration, keysFileUrls);
+      if (summary.matchedKeyCount > 0) {
+        return finalize({type: 'exposed', summary});
+      }
+    } catch (error) {
+      console.log('>>> detectExposure', error);
+    }
+
     return finalize({type: 'monitoring'});
   }
 }

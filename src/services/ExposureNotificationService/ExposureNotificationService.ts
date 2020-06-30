@@ -1,6 +1,5 @@
 import ExposureNotification, {ExposureSummary, Status as SystemStatus} from 'bridge/ExposureNotification';
 import PushNotification from 'bridge/PushNotification';
-import {TEST_MODE} from 'env';
 import {addDays, daysBetween, periodSinceEpoch} from 'shared/date-fns';
 import {I18n} from '@shopify/react-i18n';
 import {Observable} from 'shared/Observable';
@@ -144,7 +143,7 @@ export class ExposureNotificationService {
   }
 
   async updateExposureStatus(): Promise<ExposureStatus> {
-    if (!TEST_MODE && this.exposureStatusUpdatePromise) return this.exposureStatusUpdatePromise;
+    if (this.exposureStatusUpdatePromise) return this.exposureStatusUpdatePromise;
     const cleanUpPromise = <T>(input: T): T => {
       this.exposureStatusUpdatePromise = null;
       return input;

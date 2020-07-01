@@ -151,6 +151,10 @@ yarn generate-translations
 5. Add the new option in [src/screens/language/Language.tsx](./src/screens/language/Language.tsx).
 6. Add the new option in Xcode `Localizations` settings (Project -> CovidShield -> Info tab -> Localizations) and make sure `Launch Screen.storyboard` is checked.
 
+## Test plan
+
+See [Test Plan](./TEST_PLAN.md)
+
 ## Who built COVID Shield?
 
 We are a group of Shopify volunteers who want to help to slow the spread of COVID-19 by offering our

@@ -147,6 +147,7 @@
     "ConsentAction": "I agree",
     "ShareToast": "Random IDs shared successfully",
     "ErrorTitle": "Code not recognized",
+    "ErrorBody": "There was a problem with your COVID Shield code. Please try again.",
     "ErrorAction": "OK",
     "PermissionsErrorTitle": "Loading error",
     "PermissionsErrorBody": "A problem occurred while sharing your random IDs. Please try again.",

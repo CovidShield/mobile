@@ -55,6 +55,9 @@
     "EnterCodeCardTitle": "COVID Shield code",
     "EnterCodeCardBody": "Has a health care professional asked you to enter a COVID Shield code?",
     "EnterCodeCardAction": "Enter code",
+    "ShareIDsCardTitle": "Help to slow the spread",
+    "ShareIDsCardBody": "Share your random IDs to help others know if they have possibly been exposed to COVID-19.",
+    "ShareIDsCardAction": "Share",
     "NotificationCardStatus": "Push notifications are ",
     "NotificationCardStatusOff": "OFF",
     "NotificationCardBody": "You will not receive push notifications if you have possibly been exposed to COVID-19. Timely notification of potential exposure is important in helping to slow the spread of COVID-19.",
@@ -144,8 +147,10 @@
     "ConsentAction": "I agree",
     "ShareToast": "Random IDs shared successfully",
     "ErrorTitle": "Code not recognized",
-    "ErrorBody": "There was a problem with your COVID Shield code. Please try again.",
-    "ErrorAction": "OK"
+    "ErrorAction": "OK",
+    "PermissionsErrorTitle": "Loading error",
+    "PermissionsErrorBody": "A problem occurred while sharing your random IDs. Please try again.",
+    "PermissionsErrorAction": "OK"
   },
   "Notification": {
     "ExposedMessageTitle": "You have possibly been exposed to COVID-19",

@@ -55,6 +55,9 @@
     "EnterCodeCardTitle": "Code COVID Shield",
     "EnterCodeCardBody": "Un professionel de la santé vous a-t-il demandé d'entrer un code COVID Shield?",
     "EnterCodeCardAction": "Entrez le code",
+    "ShareIDsCardTitle": "Help to slow the spread",
+    "ShareIDsCardBody": "Share your random IDs to help others know if they have possibly been exposed to COVID-19.",
+    "ShareIDsCardAction": "Share",
     "NotificationCardStatus": "Les notifications poussées sont ",
     "NotificationCardStatusOff": "DÉSACTIVÉES",
     "NotificationCardBody": "Vous ne recevrez pas de notifications poussées si vous avez possiblement été exposé(e) à la COVID-19. Les notifications spontanées sont importantes pour aider à ralentir la transmission de la COVID-19.",
@@ -145,7 +148,10 @@
     "ShareToast": "Identifiants aléatoires partagés avec succès",
     "ErrorTitle": "Code non reconnu",
     "ErrorBody": "Votre code COVID Shield n'a pas pu être reconnu. Essayez de nouveau.",
-    "ErrorAction": "OK"
+    "ErrorAction": "OK",
+    "PermissionsErrorTitle": "Loading error",
+    "PermissionsErrorBody": "A problem occurred while sharing your random IDs. Please try again.",
+    "PermissionsErrorAction": "OK"
   },
   "Notification": {
     "ExposedMessageTitle": "Vous avez possiblement été exposé(e)",

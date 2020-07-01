@@ -14,7 +14,7 @@
     "SignalDataSharedCTA": "Track your symptoms",
     "SymptomTrackerUrl": "https://ca.thrive.health/covid19app/action/88a5e9a7-db9e-487b-bc87-ce35035f8e5c?from=/home&navigateTo=/tracker/complete",
     "DailyShare": "Share your new random IDs",
-    "DailyShareDetailed": "Sharing your data helps others to know if they have possibly been exposed to COVID-19.",
+    "DailyShareDetailed": "This helps others to know if they have possibly been exposed to COVID-19.",
     "ShareRandomIDsCTA": "Share your random IDs",
     "BluetoothDisabled": "Bluetooth is off",
     "EnableBluetoothCTA": "Bluetooth is used to collect and share random IDs needed for COVID Shield to work.",
@@ -144,7 +144,7 @@
     "ConsentAction": "I agree",
     "ShareToast": "Random IDs shared successfully",
     "ErrorTitle": "Code not recognized",
-    "ErrorBody": "Your COVID Shield code could not be recognized. Please try again.",
+    "ErrorBody": "There was a problem with your COVID Shield code. Please try again.",
     "ErrorAction": "OK"
   },
   "Notification": {
@@ -153,7 +153,7 @@
     "OffMessageTitle": "COVID Shield is off",
     "OffMessageBody": "Turn on COVID Shield to get notified if you have potentially been exposed to COVID-19.",
     "DailyUploadNotificationTitle": "Share your new random IDs",
-    "DailyUploadNotificationBody": "Sharing your data helps others to know if they have possibly been exposed to COVID-19."
+    "DailyUploadNotificationBody": "This helps others to know if they have possibly been exposed to COVID-19."
   },
   "Partners": {
     "Label": "Developed in partnership with"

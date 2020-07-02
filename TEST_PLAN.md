@@ -63,9 +63,7 @@ This test runs everything on production. That means you only receive notificatio
    1. Enter the code to set the device to positive.
    1. Verify that the positive state shows as expected.
 1. On 2nd device:
-   1. Leave it approximately close to 1st device overnight.
-      1. On Android, you can close the app completely or just minimize it. The app can run in the background even after being closed.
-      1. On iOS, it's recommended to just minimize the app.
+   1. Leave it approximately close to 1st device overnight. It's okay to close the app completely. The app can run in the background even after being closed.
    1. Expect to see notification saying `You have possibly been exposed to COVID-19`.
    1. Tap on notification will open the app.
    1. Expect to see exposed status showing in the app.

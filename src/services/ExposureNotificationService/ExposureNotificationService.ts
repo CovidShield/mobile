@@ -24,14 +24,18 @@ export {SystemStatus};
 export type ExposureStatus =
   | {
       type: 'monitoring';
-      lastCheckedPeriod?: number;
-      lastCheckedTimestamp?: number;
+      lastChecked?: {
+        period: number;
+        timestamp: number;
+      };
     }
   | {
       type: 'exposed';
       summary: ExposureSummary;
-      lastCheckedPeriod?: number;
-      lastCheckedTimestamp?: number;
+      lastChecked?: {
+        period: number;
+        timestamp: number;
+      };
     }
   | {
       type: 'diagnosed';
@@ -39,8 +43,10 @@ export type ExposureStatus =
       submissionLastCompletedAt?: number;
       cycleStartsAt: number;
       cycleEndsAt: number;
-      lastCheckedPeriod?: number;
-      lastCheckedTimestamp?: number;
+      lastChecked?: {
+        period: number;
+        timestamp: number;
+      };
     };
 
 export interface PersistencyProvider {
@@ -230,9 +236,15 @@ export class ExposureNotificationService {
   private async performExposureStatusUpdate(): Promise<void> {
     const exposureConfiguration = await this.backendInterface.getExposureConfiguration();
 
-    const finalize = async (status: Partial<ExposureStatus> = {}) => {
+    const finalize = async (status: Partial<ExposureStatus> = {}, lastCheckedPeriod = 0) => {
       const timestamp = new Date().getTime();
-      this.exposureStatus.append({...status, lastCheckedTimestamp: timestamp});
+      this.exposureStatus.append({
+        ...status,
+        lastChecked: {
+          timestamp,
+          period: lastCheckedPeriod,
+        },
+      });
     };
 
     const currentStatus = this.exposureStatus.get();
@@ -254,8 +266,8 @@ export class ExposureNotificationService {
     }
 
     const keysFileUrls: string[] = [];
-    const generator = this.keysSinceLastFetch(currentStatus.lastCheckedPeriod);
-    let lastCheckedPeriod = currentStatus.lastCheckedPeriod;
+    const generator = this.keysSinceLastFetch(currentStatus.lastChecked?.period);
+    let lastCheckedPeriod = currentStatus.lastChecked?.period;
     while (true) {
       const {value, done} = await generator.next();
       if (done) break;
@@ -268,12 +280,18 @@ export class ExposureNotificationService {
     try {
       const summary = await this.exposureNotification.detectExposure(exposureConfiguration, keysFileUrls);
       if (summary.matchedKeyCount > 0) {
-        return finalize({type: 'exposed', summary, lastCheckedPeriod});
+        return finalize(
+          {
+            type: 'exposed',
+            summary,
+          },
+          lastCheckedPeriod,
+        );
       }
     } catch (error) {
       console.log('>>> detectExposure', error);
     }
 
-    return finalize({lastCheckedPeriod});
+    return finalize({}, lastCheckedPeriod);
   }
 }

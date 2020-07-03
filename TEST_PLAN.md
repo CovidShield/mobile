@@ -57,7 +57,7 @@ This test runs everything on production. That means you only receive notificatio
 
 ### Scenario 1: two devices that haven't been used any Exposure Notifications app before.
 
-![image](https://user-images.githubusercontent.com/5274722/86470811-2e294280-bd0a-11ea-84bd-f1eb95b8dd6b.png)
+![image](https://user-images.githubusercontent.com/5274722/86473720-726b1180-bd0f-11ea-9f7f-ffa96ebec4dc.png)
 
 1. Build and run the app on two devices.
 1. Go through onboarding flow on both devices. Make sure EN and bluetooth are turned on properly.
@@ -86,7 +86,7 @@ This test runs everything on production. That means you only receive notificatio
 
 ### Scenario 2: two devices that haven't been used any Exposure Notifications app before.
 
-![image](https://user-images.githubusercontent.com/5274722/86470819-31243300-bd0a-11ea-9b30-60119d08386b.png)
+![image](https://user-images.githubusercontent.com/5274722/86473727-74cd6b80-bd0f-11ea-9297-8eae6d6e9bd7.png)
 
 1. Build and run the app on two devices.
 1. Go through onboarding flow on both devices. Make sure EN and bluetooth are turned on properly.

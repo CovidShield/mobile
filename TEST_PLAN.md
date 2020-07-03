@@ -55,7 +55,7 @@ Note: Because the server doesn't return Temporary Exposure Keys (TEKs) for curre
 
 This test runs everything on production. That means you only receive notification on the next one or two dates. Same date testing doesn't work for this scenario. `Test mode` cannot be used in this scenario.
 
-### Scenario 1: two devices that haven't been used any Exposure Notifications app before.
+### Scenario 1: two devices haven't been using any Exposure Notifications app before.
 
 ![image](https://user-images.githubusercontent.com/5274722/86473720-726b1180-bd0f-11ea-9f7f-ffa96ebec4dc.png)
 
@@ -84,7 +84,7 @@ This test runs everything on production. That means you only receive notificatio
    1. Expect to see exposed status showing in the app.
    1. If you uninstall the app and re-install, expect to see exposed status show immediately after onboarding flow.
 
-### Scenario 2: two devices that haven't been used any Exposure Notifications app before.
+### Scenario 2: two devices have been using Exposure Notifications app for a few days.
 
 ![image](https://user-images.githubusercontent.com/5274722/86473727-74cd6b80-bd0f-11ea-9297-8eae6d6e9bd7.png)
 

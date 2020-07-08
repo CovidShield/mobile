@@ -21,7 +21,6 @@ import com.facebook.react.bridge.ReadableMap
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 private const val CHANNEL_ID = "CovidShield"
@@ -78,6 +77,7 @@ class PushNotificationModule(context: ReactApplicationContext) : ReactContextBas
             .setSmallIcon(R.drawable.ic_notification_icon)
             .setContentTitle(config.title)
             .setContentText(config.body)
+            .setPriority(config.priority)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
@@ -89,8 +89,11 @@ private class PushNotificationConfig(
     @SerializedName("uuid") private val _uuid: String?,
     @SerializedName("alertAction") val action: String?,
     @SerializedName("alertBody") val body: String?,
-    @SerializedName("alertTitle") val title: String?
+    @SerializedName("alertTitle") val title: String?,
+    @SerializedName("priority") val _priority: Int?
 ) {
 
     val uuid get() = _uuid ?: "app.covidshield.exposure-notification"
+
+    val priority get() = _priority ?: NotificationCompat.PRIORITY_MAX
 }

@@ -1,5 +1,5 @@
-import React, {useRef, useEffect} from 'react';
-import {StyleSheet, ScrollView, useWindowDimensions} from 'react-native';
+import React, {useRef, useEffect, useLayoutEffect} from 'react';
+import {StyleSheet, ScrollView, useWindowDimensions, AccessibilityInfo, findNodeHandle} from 'react-native';
 import {Box, Text} from 'components';
 import {useI18n} from '@shopify/react-i18n';
 import LottieView from 'lottie-react-native';
@@ -24,21 +24,36 @@ const animationData = {
   },
 };
 
-export const TutorialContent = ({item, isActiveSlide}: {item: TutorialKey; isActiveSlide: boolean}) => {
+export interface TutorialContentProps {
+  item: TutorialKey;
+  isActive: boolean;
+}
+
+export const TutorialContent = ({item, isActive}: TutorialContentProps) => {
   const [i18n] = useI18n();
   const prefersReducedMotion = useReduceMotionPreference();
   const {width: viewportWidth, height: viewportHeight} = useWindowDimensions();
+
   const animationRef: React.Ref<LottieView> = useRef(null);
   useEffect(() => {
     // need to stop if user prefers reduced animations
     if (prefersReducedMotion) {
       animationRef.current?.play(animationData[item].pauseFrame, animationData[item].pauseFrame);
-    } else if (isActiveSlide) {
+    } else if (isActive) {
       animationRef.current?.play();
     } else {
       animationRef.current?.reset();
     }
-  }, [isActiveSlide, prefersReducedMotion, item]);
+  }, [isActive, prefersReducedMotion, item]);
+
+  const autoFocusRef = useRef<any>();
+  useLayoutEffect(() => {
+    const tag = findNodeHandle(autoFocusRef.current);
+    if (isActive && tag) {
+      AccessibilityInfo.setAccessibilityFocus(tag);
+    }
+  }, [isActive]);
+
   return (
     <ScrollView style={styles.flex} contentContainerStyle={styles.center}>
       <LottieView
@@ -50,6 +65,7 @@ export const TutorialContent = ({item, isActiveSlide}: {item: TutorialKey; isAct
       />
       <Box paddingHorizontal="xxl">
         <Text
+          ref={autoFocusRef}
           textAlign="center"
           color="overlayBodyText"
           variant="bodySubTitle"

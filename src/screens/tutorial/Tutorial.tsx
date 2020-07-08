@@ -1,6 +1,6 @@
 import React, {useState, useCallback, useRef} from 'react';
-import {StyleSheet, useWindowDimensions} from 'react-native';
-import Carousel, {CarouselStatic} from 'react-native-snap-carousel';
+import {StyleSheet, useWindowDimensions, View} from 'react-native';
+import Carousel, {CarouselStatic, CarouselProps} from 'react-native-snap-carousel';
 import {useNavigation} from '@react-navigation/native';
 import {Box, Button, ProgressCircles, Toolbar} from 'components';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -15,22 +15,17 @@ export const TutorialScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [i18n] = useI18n();
   const close = useCallback(() => navigation.goBack(), [navigation]);
-  const [carouselVisible, setCarousalVisible] = useState(false);
-
-  React.useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
-      setCarousalVisible(true);
-    });
-
-    return unsubscribe;
-  }, [navigation]);
 
   const isStart = currentStep === 0;
   const isEnd = currentStep === tutorialData.length - 1;
 
-  const renderItem = useCallback(
-    ({item}: {item: TutorialKey}) => {
-      return <TutorialContent item={item} isActiveSlide={tutorialData[currentStep] === item} />;
+  const renderItem = useCallback<CarouselProps<TutorialKey>['renderItem']>(
+    ({item, index}) => {
+      return (
+        <View style={styles.flex} accessibilityElementsHidden={index !== currentStep}>
+          <TutorialContent item={item} isActive={tutorialData[currentStep] === item} />
+        </View>
+      );
     },
     [currentStep],
   );
@@ -61,16 +56,16 @@ export const TutorialScreen = () => {
           navLabel={i18n.translate('Tutorial.Close')}
           onIconClicked={close}
         />
-        {carouselVisible && (
-          <Carousel
-            ref={carouselRef}
-            data={tutorialData}
-            renderItem={renderItem}
-            sliderWidth={viewportWidth}
-            itemWidth={viewportWidth}
-            onSnapToItem={newIndex => setCurrentStep(newIndex)}
-          />
-        )}
+        <Carousel
+          ref={carouselRef}
+          data={tutorialData}
+          renderItem={renderItem}
+          sliderWidth={viewportWidth}
+          itemWidth={viewportWidth}
+          onSnapToItem={newIndex => setCurrentStep(newIndex)}
+          importantForAccessibility="no"
+          accessible={false}
+        />
         <Box flexDirection="row" padding="l">
           <Box flex={1}>
             {!isStart && (

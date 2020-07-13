@@ -29,12 +29,12 @@ export const OnboardingScreen = () => {
   const startExposureNotificationService = useStartExposureNotificationService();
 
   const handlePermissions = useCallback(async () => {
-    await startExposureNotificationService();
     setOnboarded(true);
     navigation.reset({
       index: 0,
       routes: [{name: 'Home'}],
     });
+    await startExposureNotificationService();
   }, [navigation, setOnboarded, startExposureNotificationService]);
 
   const maxWidth = useMaxContentWidth();

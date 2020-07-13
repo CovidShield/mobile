@@ -128,9 +128,8 @@ export class ExposureNotificationService {
     }
 
     await this.updateSystemStatus();
-    await this.updateExposureStatus();
-
     this.starting = false;
+    await this.updateExposureStatus();
   }
 
   async updateSystemStatus(): Promise<void> {

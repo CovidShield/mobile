@@ -1,7 +1,6 @@
 export function blobFetch(uri: string, method: 'GET' | 'POST', body?: Uint8Array): Promise<ArrayBuffer> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.setRequestHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     xhr.onload = function() {
       if (xhr.status >= 200 && xhr.status <= 299) {
         resolve(xhr.response);
@@ -19,6 +18,7 @@ export function blobFetch(uri: string, method: 'GET' | 'POST', body?: Uint8Array
 
     xhr.open(method, uri, true);
     xhr.setRequestHeader('Content-Type', 'application/x-protobuf');
+    xhr.setRequestHeader('Cache-Control', 'no-store');
     xhr.send(body || null);
   });
 }

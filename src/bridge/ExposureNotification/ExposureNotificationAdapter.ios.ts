@@ -7,10 +7,7 @@ export default function ExposureNotificationAdapter(
 ): ExposureNotification {
   return {
     ...exposureNotificationAPI,
-    detectExposure: async (
-      configuration: ExposureConfiguration,
-      diagnosisKeysURLs: string[],
-    ): Promise<ExposureSummary> => {
+    detectExposure: async (configuration: ExposureConfiguration, diagnosisKeysURLs: string[]) => {
       if (diagnosisKeysURLs.length === 0) {
         throw new Error('Attempt to call detectExposure with empty list of downloaded files');
       }

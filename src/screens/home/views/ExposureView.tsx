@@ -2,13 +2,14 @@ import React, {useCallback} from 'react';
 import {Linking} from 'react-native';
 import {useI18n} from '@shopify/react-i18n';
 import {Text, Button, Box, LastCheckedDisplay} from 'components';
+import {captureException} from 'shared/log';
 
 import {BaseHomeView} from '../components/BaseHomeView';
 
 export const ExposureView = () => {
   const [i18n] = useI18n();
   const onAction = useCallback(() => {
-    Linking.openURL(i18n.translate('Home.GuidanceUrl')).catch(err => console.error('An error occurred', err));
+    Linking.openURL(i18n.translate('Home.GuidanceUrl')).catch(error => captureException('OpenUrl', error));
   }, [i18n]);
   return (
     <BaseHomeView>

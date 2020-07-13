@@ -7,6 +7,7 @@ import nacl from 'tweetnacl';
 import {getRandomBytes, downloadDiagnosisKeysFile} from 'bridge/CovidShield';
 import {blobFetch} from 'shared/fetch';
 import {TRANSMISSION_RISK_LEVEL, REGION} from 'env';
+import {captureMessage} from 'shared/log';
 
 import {covidshield} from './covidshield';
 import {BackendInterface, SubmissionKeySet} from './types';
@@ -31,11 +32,14 @@ export class BackendService implements BackendInterface {
     const message = `${this.region}:${period}:${Math.floor(Date.now() / 1000 / 3600)}`;
     const hmac = hmac256(message, encHex.parse(this.hmacKey)).toString(encHex);
     const url = `${this.retrieveUrl}/retrieve/${this.region}/${period}/${hmac}`;
+    captureMessage('retrieveDiagnosisKeys', {period, url});
     return downloadDiagnosisKeysFile(url);
   }
 
   async getExposureConfiguration() {
-    return (await fetch(`${this.retrieveUrl}/exposure-configuration/${REGION}.json`, FETCH_HEADERS)).json();
+    const url = `${this.retrieveUrl}/exposure-configuration/${REGION}.json`;
+    captureMessage('getExposureConfiguration', {url});
+    return (await fetch(url, FETCH_HEADERS)).json();
   }
 
   async claimOneTimeCode(oneTimeCode: string): Promise<SubmissionKeySet> {
@@ -68,6 +72,11 @@ export class BackendService implements BackendInterface {
     );
     const exposureKeys = filteredExposureKeys.slice(0, MAX_UPLOAD_KEYS);
 
+    captureMessage('reportDiagnosisKeys', {
+      exposureKeys,
+      _exposureKeys,
+    });
+
     const upload = covidshield.Upload.create({
       timestamp: {seconds: Math.floor(new Date().getTime() / 1000)},
       keys: exposureKeys.map(key =>
@@ -91,10 +100,12 @@ export class BackendService implements BackendInterface {
     const nonce = await getRandomBytes(24);
     const encryptedPayload = nacl.box(serializedUpload, nonce, serverPublicKey, clientPrivate);
 
+    captureMessage('Uploading encrypted diagnosis keys');
     await this.upload(encryptedPayload, nonce, serverPublicKey, clientPublicKey);
   }
 
   private async keyClaim(code: string, keyPair: nacl.BoxKeyPair): Promise<covidshield.KeyClaimResponse> {
+    captureMessage('keyClaim', {code});
     const uploadPayload = covidshield.KeyClaimRequest.create({
       oneTimeCode: code,
       appPublicKey: keyPair.publicKey,

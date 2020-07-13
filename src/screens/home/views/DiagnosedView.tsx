@@ -5,6 +5,7 @@ import {Text, Button, Box} from 'components';
 import {useExposureStatus} from 'services/ExposureNotificationService';
 import {daysBetween} from 'shared/date-fns';
 import {pluralizeKey} from 'shared/pluralization';
+import {captureException} from 'shared/log';
 
 import {BaseHomeView} from '../components/BaseHomeView';
 
@@ -12,7 +13,7 @@ export const DiagnosedView = () => {
   const [i18n] = useI18n();
   const [exposureStatus] = useExposureStatus();
   const onAction = useCallback(() => {
-    Linking.openURL(i18n.translate('Home.SymptomTrackerUrl')).catch(err => console.error('An error occurred', err));
+    Linking.openURL(i18n.translate('Home.SymptomTrackerUrl')).catch(error => captureException('OpenUrl', error));
   }, [i18n]);
 
   if (exposureStatus.type !== 'diagnosed') return null;

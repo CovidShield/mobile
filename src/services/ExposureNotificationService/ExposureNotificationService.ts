@@ -8,6 +8,7 @@ import PushNotification from 'bridge/PushNotification';
 import {addDays, daysBetween, periodSinceEpoch} from 'shared/date-fns';
 import {I18n} from '@shopify/react-i18n';
 import {Observable, MapObservable} from 'shared/Observable';
+import {captureException, captureMessage} from 'shared/log';
 
 import {BackendInterface, SubmissionKeySet} from '../BackendService';
 
@@ -122,7 +123,8 @@ export class ExposureNotificationService {
 
     try {
       await this.exposureNotification.start();
-    } catch (_) {
+    } catch (error) {
+      captureException('Cannot start EN framework', error);
       this.systemStatus.set(SystemStatus.Unknown);
       return;
     }
@@ -142,6 +144,7 @@ export class ExposureNotificationService {
 
     const unobserver = this.exposureStatus.observe(async exposureStatus => {
       if (exposureStatus.type === 'exposed' && !exposureStatus.notificationSent) {
+        captureMessage('Present exposed notification', {exposureStatus: this.exposureStatus.get()});
         PushNotification.presentLocalNotification({
           alertTitle: this.i18n.translate('Notification.ExposedMessageTitle'),
           alertBody: this.i18n.translate('Notification.ExposedMessageBody'),
@@ -151,6 +154,7 @@ export class ExposureNotificationService {
         });
       }
       if (exposureStatus.type === 'diagnosed' && exposureStatus.needsSubmission) {
+        captureMessage('Present daily upload notification', {exposureStatus: this.exposureStatus.get()});
         PushNotification.presentLocalNotification({
           alertTitle: this.i18n.translate('Notification.DailyUploadNotificationTitle'),
           alertBody: this.i18n.translate('Notification.DailyUploadNotificationBody'),
@@ -159,10 +163,12 @@ export class ExposureNotificationService {
     });
 
     try {
+      captureMessage('updateExposureStatusInBackground', {exposureStatus: this.exposureStatus.get()});
       await this.processPendingExposureSummary();
       await this.updateExposureStatus();
+      captureMessage('updatedExposureStatusInBackground', {exposureStatus: this.exposureStatus.get()});
     } catch (error) {
-      // Noop
+      captureException('updateExposureStatusInBackground', error);
     }
 
     unobserver();
@@ -198,6 +204,7 @@ export class ExposureNotificationService {
     }
     const auth = JSON.parse(submissionKeysStr) as SubmissionKeySet;
     const diagnosisKeys = await this.exposureNotification.getTemporaryExposureKeyHistory();
+    captureMessage('fetchAndSubmitKeys', {diagnosisKeys});
     if (diagnosisKeys.length > 0) {
       await this.backendInterface.reportDiagnosisKeys(auth, diagnosisKeys);
     }
@@ -217,13 +224,12 @@ export class ExposureNotificationService {
     try {
       const exposureConfigurationStr = await this.secureStorage.getItem(EXPOSURE_CONFIGURATION, SECURE_OPTIONS);
       if (exposureConfigurationStr) {
-        console.warn('>>> Using previously saved exposureConfiguration');
         return JSON.parse(exposureConfigurationStr);
       } else {
         throw new Error('Unable to use saved exposureConfiguration');
       }
     } catch (error) {
-      console.warn('>>> Using default exposureConfiguration', error);
+      captureException('Using default exposureConfiguration', error);
       return defaultExposureConfiguration;
     }
   }
@@ -266,8 +272,8 @@ export class ExposureNotificationService {
         const keysFileUrl = await this.backendInterface.retrieveDiagnosisKeys(runningPeriod);
         const period = runningPeriod;
         yield {keysFileUrl, period};
-      } catch (err) {
-        console.log('>>> Error while downloading key file', err);
+      } catch (error) {
+        captureException('Error while downloading key file', error);
       }
 
       runningPeriod -= 1;
@@ -282,14 +288,15 @@ export class ExposureNotificationService {
       await this.secureStorage.setItem(EXPOSURE_CONFIGURATION, serialized, SECURE_OPTIONS);
     } catch (error) {
       if (error instanceof SyntaxError) {
-        console.error('>>> JSON Parsing error: Unable to parse downloaded exposureConfiguration', error);
+        captureException('JSON Parsing Error: Unable to parse downloaded exposureConfiguration', error);
       } else {
-        console.error('>>> Network error: Unable to download exposureConfiguration', error);
+        captureException('Network Error: Unable to download exposureConfiguration.', error);
       }
       exposureConfiguration = await this.getAlternateExposureConfiguration();
     }
 
     const finalize = async (status: Partial<ExposureStatus> = {}, lastCheckedPeriod = 0) => {
+      const previousExposureStatus = this.exposureStatus.get();
       const timestamp = new Date().getTime();
       this.exposureStatus.append({
         ...status,
@@ -297,6 +304,11 @@ export class ExposureNotificationService {
           timestamp,
           period: lastCheckedPeriod,
         },
+      });
+      const currentExposureStatus = this.exposureStatus.get();
+      captureMessage('finalize', {
+        previousExposureStatus,
+        currentExposureStatus,
       });
     };
 
@@ -318,6 +330,7 @@ export class ExposureNotificationService {
       return finalize();
     }
 
+    const keysFileUrls: string[] = [];
     const generator = this.keysSinceLastFetch(currentStatus.lastChecked?.period);
     let lastCheckedPeriod = currentStatus.lastChecked?.period;
     while (true) {
@@ -325,27 +338,35 @@ export class ExposureNotificationService {
       if (done) break;
       if (!value) continue;
       const {keysFileUrl, period} = value;
+      keysFileUrls.push(keysFileUrl);
 
       // Temporarily disable persisting lastCheckPeriod on Android
       // Ref https://github.com/cds-snc/covid-shield-mobile/issues/453
       if (Platform.OS !== 'android') {
         lastCheckedPeriod = Math.max(lastCheckedPeriod || 0, period);
       }
+    }
 
-      try {
-        const summary = await this.exposureNotification.detectExposure(exposureConfiguration, [keysFileUrl]);
-        if (summary.matchedKeyCount > 0) {
-          return finalize(
-            {
-              type: 'exposed',
-              summary,
-            },
-            lastCheckedPeriod,
-          );
-        }
-      } catch (error) {
-        console.log('>>> DetectExposure', error);
+    captureMessage('performExposureStatusUpdate', {
+      keysFileUrls,
+      lastCheckedPeriod,
+      exposureConfiguration,
+    });
+
+    try {
+      const summary = await this.exposureNotification.detectExposure(exposureConfiguration, keysFileUrls);
+      captureMessage('summary', {summary});
+      if (summary.matchedKeyCount > 0) {
+        return finalize(
+          {
+            type: 'exposed',
+            summary,
+          },
+          lastCheckedPeriod,
+        );
       }
+    } catch (error) {
+      captureException('performExposureStatusUpdate', error);
     }
 
     return finalize({}, lastCheckedPeriod);

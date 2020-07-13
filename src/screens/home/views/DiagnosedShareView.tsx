@@ -3,6 +3,7 @@ import {Linking} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useI18n} from '@shopify/react-i18n';
 import {Text, Button, Box} from 'components';
+import {captureException} from 'shared/log';
 
 import {BaseHomeView} from '../components/BaseHomeView';
 
@@ -10,7 +11,7 @@ export const DiagnosedShareView = () => {
   const [i18n] = useI18n();
   const navigation = useNavigation();
   const toSymptomTracker = useCallback(() => {
-    Linking.openURL(i18n.translate('Home.SymptomTrackerUrl')).catch(err => console.error('An error occurred', err));
+    Linking.openURL(i18n.translate('Home.SymptomTrackerUrl')).catch(error => captureException('OpenUrl', error));
   }, [i18n]);
   const toDataShare = useCallback(() => navigation.navigate('DataSharing'), [navigation]);
 

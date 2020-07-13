@@ -3,6 +3,7 @@ import {TouchableOpacity, TouchableOpacityProps, Linking} from 'react-native';
 import {Box, Text, Icon, IconProps} from 'components';
 import {useNavigation} from '@react-navigation/native';
 import {useI18n} from '@shopify/react-i18n';
+import {captureException} from 'shared/log';
 
 interface InfoShareItemProps extends TouchableOpacityProps {
   onPress: () => void;
@@ -29,7 +30,7 @@ export const InfoShareView = () => {
   const [i18n] = useI18n();
   const navigation = useNavigation();
   const onSymptomps = useCallback(() => {
-    Linking.openURL(i18n.translate('Info.SymptomsUrl')).catch(err => console.error('An error occurred', err));
+    Linking.openURL(i18n.translate('Info.SymptomsUrl')).catch(error => captureException('OpenUrl', error));
   }, [i18n]);
   const onPrivacy = useCallback(() => navigation.navigate('Privacy'), [navigation]);
   const onLearnMore = useCallback(() => navigation.navigate('Tutorial'), [navigation]);

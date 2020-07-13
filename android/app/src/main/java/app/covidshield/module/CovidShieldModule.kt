@@ -28,9 +28,9 @@ class CovidShieldModule(context: ReactApplicationContext) : ReactContextBaseJava
     @ReactMethod
     fun getRandomBytes(size: Int, promise: Promise) {
         promise.launch(this) {
-            val bytes = SecureRandom().generateSeed(size)
-            val base64Encoded = Base64.encodeToString(bytes, Base64.DEFAULT)
-            promise.resolve(base64Encoded)
+          val bytes = SecureRandom().generateSeed(size)
+          val base64Encoded = Base64.encodeToString(bytes, Base64.DEFAULT)
+          promise.resolve(base64Encoded)
         }
     }
 

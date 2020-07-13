@@ -40,6 +40,7 @@ export type ExposureStatus =
   | {
       type: 'exposed';
       summary: ExposureSummary;
+      notificationSent?: boolean;
       lastChecked?: {
         period: number;
         timestamp: number;
@@ -111,11 +112,6 @@ export class ExposureNotificationService {
     });
   }
 
-  async init() {
-    const exposureStatus = JSON.parse((await this.storage.getItem(EXPOSURE_STATUS)) || 'null');
-    this.exposureStatus.append({...exposureStatus});
-  }
-
   async start(): Promise<void> {
     if (this.starting) {
       return;
@@ -143,13 +139,16 @@ export class ExposureNotificationService {
   }
 
   async updateExposureStatusInBackground() {
-    const lastStatus = this.exposureStatus.get();
+    await this.init();
     await this.updateExposureStatus();
     const currentStatus = this.exposureStatus.get();
-    if (lastStatus.type === 'monitoring' && currentStatus.type === 'exposed') {
+    if (currentStatus.type === 'exposed' && !currentStatus.notificationSent) {
       PushNotification.presentLocalNotification({
         alertTitle: this.i18n.translate('Notification.ExposedMessageTitle'),
         alertBody: this.i18n.translate('Notification.ExposedMessageBody'),
+      });
+      await this.exposureStatus.append({
+        notificationSent: true,
       });
     }
     if (currentStatus.type === 'diagnosed' && currentStatus.needsSubmission) {
@@ -194,6 +193,11 @@ export class ExposureNotificationService {
       await this.backendInterface.reportDiagnosisKeys(auth, diagnosisKeys);
     }
     await this.recordKeySubmission();
+  }
+
+  private async init() {
+    const exposureStatus = JSON.parse((await this.storage.getItem(EXPOSURE_STATUS)) || 'null');
+    this.exposureStatus.append({...exposureStatus});
   }
 
   /**

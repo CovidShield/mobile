@@ -29,7 +29,6 @@ BackgroundScheduler.registerAndroidHeadlessPeriodicTask(async () => {
     SecureStorage,
     ExposureNotification,
   );
-  await exposureNotificationService.init();
   await exposureNotificationService.updateExposureStatusInBackground();
 });
 

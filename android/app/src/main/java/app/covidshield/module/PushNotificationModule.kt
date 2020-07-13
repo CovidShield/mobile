@@ -78,7 +78,6 @@ class PushNotificationModule(context: ReactApplicationContext) : ReactContextBas
             .setContentTitle(config.title)
             .setContentText(config.body)
             .setPriority(config.priority)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
         notificationManager.notify(config.uuid.hashCode(), builder.build())

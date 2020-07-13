@@ -31,5 +31,6 @@ export default function ExposureNotificationAdapter(
       }
       return summary!;
     },
+    getPendingExposureSummary: async () => undefined,
   };
 }

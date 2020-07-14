@@ -1,4 +1,4 @@
-import React, {useState, useCallback, useRef, useEffect, useMemo} from 'react';
+import React, {useCallback, useRef, useEffect, useMemo} from 'react';
 import {View, StyleSheet, TouchableOpacity, useWindowDimensions} from 'react-native';
 import Animated from 'react-native-reanimated';
 import {useSafeArea} from 'react-native-safe-area-context';
@@ -16,12 +16,20 @@ export interface BottomSheetProps {
   collapsed?: React.ComponentType;
   content: React.ComponentType;
   extraContent?: boolean;
+  isExpanded: boolean;
+  setIsExpanded: (bool: boolean) => void;
 }
 
-const BottomSheet = ({content: ContentComponent, collapsed: CollapsedComponent, extraContent}: BottomSheetProps) => {
+const BottomSheet = ({
+  content: ContentComponent,
+  collapsed: CollapsedComponent,
+  extraContent,
+  isExpanded,
+  setIsExpanded,
+}: BottomSheetProps) => {
   const bottomSheetPosition = useRef(new Animated.Value(1));
   const bottomSheetRef: React.Ref<BottomSheetRaw> = useRef(null);
-  const [isExpanded, setIsExpanded] = useState(false);
+  // const [isExpanded, setIsExpanded] = useState(false);
   const [i18n] = useI18n();
   const toggleExpanded = useCallback(() => {
     if (isExpanded) {
@@ -93,6 +101,7 @@ const BottomSheet = ({content: ContentComponent, collapsed: CollapsedComponent, 
         renderContent={renderContent}
         onOpenEnd={onOpenEnd}
         onCloseEnd={onCloseEnd}
+        onCloseStart={onCloseEnd}
         renderHeader={renderHeader}
         snapPoints={snapPoints}
         initialSnap={1}

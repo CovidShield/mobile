@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import {BottomSheet, Box} from 'components';
@@ -92,15 +92,28 @@ const BottomSheetContent = () => {
   );
 };
 
-const BottomSheetWrapper = () => {
+const BottomSheetWrapper = ({
+  isExpanded,
+  setIsExpanded,
+}: {
+  isExpanded: boolean;
+  setIsExpanded: (bool: boolean) => void;
+}) => {
   const [notificationStatus] = useNotificationPermissionStatus();
   const showNotificationWarning = notificationStatus !== 'granted';
   return (
-    <BottomSheet content={BottomSheetContent} collapsed={CollapsedContent} extraContent={showNotificationWarning} />
+    <BottomSheet
+      isExpanded={isExpanded}
+      setIsExpanded={setIsExpanded}
+      content={BottomSheetContent}
+      collapsed={CollapsedContent}
+      extraContent={showNotificationWarning}
+    />
   );
 };
 
 export const HomeScreen = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const navigation = useNavigation();
   useEffect(() => {
     if (__DEV__) {
@@ -128,9 +141,9 @@ export const HomeScreen = () => {
     <NotificationPermissionStatusProvider>
       <Box flex={1} alignItems="center" backgroundColor="mainBackground">
         <Box flex={1} maxWidth={maxWidth} paddingTop="m">
-          <Content />
+          {!isExpanded && <Content />}
         </Box>
-        <BottomSheetWrapper />
+        <BottomSheetWrapper isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
       </Box>
     </NotificationPermissionStatusProvider>
   );

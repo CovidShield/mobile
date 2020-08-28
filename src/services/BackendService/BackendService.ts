@@ -6,7 +6,7 @@ import {TemporaryExposureKey} from 'bridge/ExposureNotification';
 import nacl from 'tweetnacl';
 import {getRandomBytes, downloadDiagnosisKeysFile} from 'bridge/CovidShield';
 import {blobFetch} from 'shared/fetch';
-import {TRANSMISSION_RISK_LEVEL, REGION} from 'env';
+import {TRANSMISSION_RISK_LEVEL} from 'env';
 import {captureMessage} from 'shared/log';
 
 import {covidshield} from './covidshield';
@@ -14,6 +14,9 @@ import {BackendInterface, SubmissionKeySet} from './types';
 
 const MAX_UPLOAD_KEYS = 14;
 const FETCH_HEADERS = {headers: {'Cache-Control': 'no-store'}};
+
+// See https://github.com/cds-snc/covid-shield-server/pull/176
+const LAST_14_DAYS_PERIOD = '00000';
 
 export class BackendService implements BackendInterface {
   retrieveUrl: string;
@@ -29,15 +32,16 @@ export class BackendService implements BackendInterface {
   }
 
   async retrieveDiagnosisKeys(period: number) {
-    const message = `${this.region}:${period}:${Math.floor(Date.now() / 1000 / 3600)}`;
+    const periodStr = `${period > 0 ? period : LAST_14_DAYS_PERIOD}`;
+    const message = `${this.region}:${periodStr}:${Math.floor(Date.now() / 1000 / 3600)}`;
     const hmac = hmac256(message, encHex.parse(this.hmacKey)).toString(encHex);
-    const url = `${this.retrieveUrl}/retrieve/${this.region}/${period}/${hmac}`;
+    const url = `${this.retrieveUrl}/retrieve/${this.region}/${periodStr}/${hmac}`;
     captureMessage('retrieveDiagnosisKeys', {period, url});
     return downloadDiagnosisKeysFile(url);
   }
 
   async getExposureConfiguration() {
-    const url = `${this.retrieveUrl}/exposure-configuration/${REGION}.json`;
+    const url = `${this.retrieveUrl}/exposure-configuration/${this.region}.json`;
     captureMessage('getExposureConfiguration', {url});
     return (await fetch(url, FETCH_HEADERS)).json();
   }

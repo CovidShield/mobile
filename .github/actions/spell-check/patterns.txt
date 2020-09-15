@@ -1,0 +1,3 @@
+(?:0[Xx]|U\+|#)[a-f0-9A-FGgRr]{2,}[Uu]?[Ll]{0,2}\b
+\b([A-Za-z])\1{3,}\b
+\.figma\.com/file/[a-zA-Z0-9]+/

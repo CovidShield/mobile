@@ -193,3 +193,6 @@ cp debug.keystore ~/.android/debug.keystore
 ```
 
 Now you can run `yarn run-android` in your root folder.
+
+
+please Make a Video of this project which Helps Other people.

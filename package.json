@@ -34,7 +34,7 @@
     "lottie-ios": "3.1.8",
     "lottie-react-native": "^3.4.0",
     "react": "16.11.0",
-    "react-native": "0.62.2",
+    "react-native": "0.62.3",
     "react-native-background-fetch": "^3.1.0",
     "react-native-config": "^1.1.0",
     "react-native-gesture-handler": "^1.6.1",

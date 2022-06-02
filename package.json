@@ -78,7 +78,7 @@
     "patch-package": "^6.2.2",
     "prettier": "1.19.1",
     "prettier-eslint": "^9.0.0",
-    "protobufjs": "^6.9.0",
+    "protobufjs": "^6.11.3",
     "react-native-svg-transformer": "^0.14.3",
     "react-test-renderer": "16.11.0",
     "reactotron-react-native": "^3.2.1",
